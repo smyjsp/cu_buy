@@ -150,39 +150,6 @@ footer {
     color: #4285f4;
 }
 
-.search-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 10px 0;
-}
-
-.search-bar {
-    width: 90%;
-    position: relative;
-}
-
-.search-bar input {
-    width: 100%;
-    padding: 8px 35px 8px 15px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    font-size: 14px;
-    outline: none;
-}
-
-.search-bar .camera-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: #666;
-}
-
 .nav-icon img {
     width: 25px;
     height: 25px;
@@ -191,4 +158,49 @@ footer {
 .nav-icon.profile img {
     width: 20px;
     height: 20px;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.search-input {
+    display: flex;
+    align-items: center;
+    background-color: #f7f7f7;
+    border-radius: 15px;
+    padding: 0 10px;
+    border: none;
+    width: 100%; 
+    position: relative; 
+    max-width: 600px; 
+}
+
+.search-input img:first-child {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    left: 15px; 
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.search-input input {
+    flex: 1;
+    border: none;
+    padding: 10px 50px 10px 35px; 
+    font-size: 14px;
+    outline: none;
+    background: none;
+}
+
+.search-input img:last-child {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    right: 15px; 
+    top: 50%;
+    transform: translateY(-50%);
 }

@@ -11,7 +11,7 @@ body {
     margin: 0 auto;
     background: white;
     border: 1px solid #ddd;
-    border-radius: 10px;
+    border-radius: 40px;
     overflow: hidden;
 }
 
@@ -119,24 +119,35 @@ body {
     background-color: #f8f8f8;
     border-radius: 10px;
     margin-bottom: 10px;
+    padding-bottom: 5px;
+    padding-left: 7px;
 }
 
 .meta .details-content {
-    margin: 5px 0;
+    margin: 1px 0;
     font-size: 14px;
     color: #555;
 }
 
 .description {
     background-color: #f8f8f8;
-    padding: 10px;
+    padding: 7px;
     border-radius: 10px;
+}
+
+.description h1 {
+    font-size: 18px;
+    font-weight: bold;
+    padding-top: 0;
+    margin-bottom: 0.5px;
 }
 
 .description p {
     font-size: 14px;
     color: #555;
-    line-height: 1.5;
+    line-height: 1.2;
+    margin-bottom: 2px;
+    margin-top: 0;
 }
 
 .actions {
@@ -180,6 +191,8 @@ body {
 }
 
 .meta .details-text {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
+    padding-top: 5px;
+    margin-bottom: 0.5px;
 }
