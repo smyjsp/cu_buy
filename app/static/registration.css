@@ -1,0 +1,158 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+header img {
+    width: 150px; /* Adjust the width to make the logo smaller */
+    height: auto; /* Maintain the aspect ratio */
+    display: block; /* Ensure proper spacing */
+}
+
+.photo-circle img {
+    width: 40px; /* Adjust width to fit the circle */
+    height: 40px; /* Adjust height proportionally */
+    object-fit: contain; /* Ensure it scales without distortion */
+}
+
+
+.container {
+    width: 375px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #5c8dc1;
+}
+
+.logo span {
+    color: #8aacc8;
+}
+
+.time {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Form Container */
+.form-container {
+    text-align: center;
+}
+
+.form-container h1 {
+    font-size: 28px;
+    color: #333;
+}
+
+.form-container p {
+    font-size: 16px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+/* Photo Upload Section */
+.photo-upload {
+    margin: 20px auto;
+}
+
+.photo-circle {
+    width: 80px;
+    height: 80px;
+    border: 2px dashed #ccc;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.camera-icon {
+    font-size: 24px;
+    color: #666;
+}
+
+/* Form Fields */
+form {
+    text-align: left;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Upload Section */
+.upload-section {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.upload-box {
+    width: 100%;
+    padding: 20px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    text-align: center;
+    color: #666;
+}
+
+.upload-box .plus {
+    font-size: 24px;
+    font-weight: bold;
+    display: block;
+}
+
+/* Register Button */
+.register-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #0085ff;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.register-button:hover {
+    background-color: #357ae8;
+}
