@@ -73,10 +73,11 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderColor: '#ccc',
     borderRadius: 12,
-    paddingVertical: height * 0.03,
+    paddingVertical: height * 0.02,
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: height * 0.02,
+    minHeight: height * 0.25,
   },
   uploadIcon: {
     width: 24,
@@ -94,9 +95,9 @@ const styles = StyleSheet.create({
   },
   idPreview: {
     width: '90%',
-    height: 120,
+    height: height * 0.22,
     borderRadius: 8,
-    resizeMode: 'cover',
+    resizeMode: 'contain',
   },
   changePhotoText: {
     color: '#666',
@@ -113,9 +114,9 @@ const styles = StyleSheet.create({
     marginTop: height * 0.02,
   },
   registerButtonText: {
-    fontSize: width * 0.045,
-    color: '#FFF',
-    fontWeight: 'bold',
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
   profileImage: {
     width: '100%',
