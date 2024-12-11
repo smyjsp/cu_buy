@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from contextlib import contextmanager
-from models import Base  # Import your Base and all models here
+from models import Base, User  # Import your Base and all models here
 
 
 class SQLAlchemyHandler:
@@ -77,3 +77,6 @@ class SQLAlchemyHandler:
         :return: The record or None.
         """
         return session.query(model).get(record_id)
+    
+    def get_user_by_email(self, session, email):
+        return session.query(User).filter(User.email == email).first()

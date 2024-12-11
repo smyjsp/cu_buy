@@ -6,9 +6,10 @@ import os
 app = Flask(__name__)
 
 # Configuration
-DATABASE_URL = os.environ.get('DATABASE_URL', 'mysql+pymysql://root:your_password@3.149.231.33:3306/')
+DATABASE_URL = os.environ.get('DATABASE_URL_USERS', 'mysql+pymysql://root:your_password@127.0.0.1:3306/users')
 
 app.config['DATABASE_URL'] = DATABASE_URL
+
 
 # Initialize SQLAlchemy handler
 handler = SQLAlchemyHandler(app.config['DATABASE_URL'])
@@ -39,12 +40,37 @@ def register():
         if 'idImage' in request.files:
             data['idImage'] = request.files['idImage'].filename
         
-        print("Received data:", data)  # Detailed logging
-        print("Received files:", request.files)
+        print("Received data:", data)  # Debugging log
+        print("Received files:", request.files)  # Debugging log
         
         with handler.session_scope() as session:
             try:
-                new_user = User(**data)
+                if handler.get_user_by_email(session, data['email']):
+                    return jsonify({
+                        'status': 'error',
+                        'message': 'User already exists'
+                    }), 400
+                if not os.path.exists(f"./data/{data['uni']}"):
+                    # save the image to the folder
+                    os.makedirs(f"./data/{data['uni']}", exist_ok=True)
+                    if 'profileImage' in request.files:
+                        request.files['profileImage'].save(f"./data/{data['uni']}/profileImage.jpg")
+                        profile_image_url = f"./data/{data['uni']}/profileImage.jpg"
+                    if 'idImage' in request.files:
+                        request.files['idImage'].save(f"./data/{data['uni']}/idImage.jpg")
+                        id_card_image_url = f"./data/{data['uni']}/idImage.jpg"
+                else:
+                    return jsonify({
+                        'status': 'error',
+                        'message': 'User already exists'
+                    }), 400
+                new_user = User(
+                    name=data['firstName'] + " " + data['lastName'],
+                    email=data['email'],
+                    uni=data['uni'],
+                    profile_image_url=profile_image_url,
+                    id_card_image_url=id_card_image_url
+                )
                 session.add(new_user)
                 session.commit()
                 return jsonify({
@@ -53,7 +79,6 @@ def register():
                     'data': data
                 }), 200
             except Exception as db_error:
-                session.rollback()
                 print("Database Error:", str(db_error))
                 return jsonify({
                     'status': 'database_error',

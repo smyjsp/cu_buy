@@ -195,47 +195,54 @@ const RegistrationScreen = () => {
       // Show loading indicator
       setIsLoading(true);
 
-      // Create form data for sending files
       const formData = new FormData();
       
       // Add text fields
-      formData.append('firstName', firstName.trim());
-      formData.append('lastName', lastName.trim());
-      formData.append('email', email.trim());
-      formData.append('uni', uni.trim());
+      formData.append('firstName', firstName);
+      formData.append('lastName', lastName);
+      formData.append('email', email);
+      formData.append('uni', uni);
+      
+      // Add images if they exist
+      if (profileImage) {
+        formData.append('profileImage', {
+          uri: profileImage.uri,
+          type: 'image/jpeg',  // or appropriate mime type
+          name: 'profile.jpg'
+        });
+      }
+      
+      if (idImage) {
+        formData.append('idImage', {
+          uri: idImage.uri,
+          type: 'image/jpeg',  // or appropriate mime type
+          name: 'id.jpg'
+        });
+      }
 
-      // Add profile image
-      formData.append('profileImage', {
-        uri: profileImage,
-        type: 'image/jpeg',
-        name: `${firstName}_${lastName}_${uni}.jpg`
-      });
-
-      // Add ID image
-      formData.append('idImage', {
-        uri: idImage,
-        type: 'image/jpeg',
-        name: 'id.jpg'
-      });
-
-      // Make API call to your backend
       const response = await fetch('http://3.149.231.33/register', {
         method: 'POST',
         body: formData,
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Accept': 'application/json',
         },
       });
 
-      const data = await response.json();
-      alert(data.message);
-
-      if (!response.ok) {
+      console.log('Response status:', response.status);  // Debug log
+      const responseText = await response.text();  // First get text
+      console.log('Response text:', responseText);  // Debug log
+      
+      const data = JSON.parse(responseText);  // Then parse it
+      
+      if (response.ok) {
+        Alert.alert('Success', data.message);
+        
+      } else {
         throw new Error(data.message || 'Registration failed');
       }
     } catch (error) {
-      console.log('Error registering:', error);
-      Alert.alert('Error', error.message);
+      console.error('Error:', error);
+      Alert.alert('Error', error.message || 'Registration failed');
     } finally {
       setIsLoading(false);
     }
