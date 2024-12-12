@@ -2,6 +2,9 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+
+ssh -i ps_key.pem ps3255@ec2-3-149-231-33.us-east-2.compute.amazonaws.com 
+
 ## Get started
 
 1. Install dependencies
