@@ -57,3 +57,6 @@ expo-env.d.ts
 # @end expo-cli
 
 CUBuy.pem
+*.key
+*.pem
+id_rsa.pub
