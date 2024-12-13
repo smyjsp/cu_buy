@@ -4,7 +4,7 @@ import styles from './homepage_style';
 
 const { width } = Dimensions.get('window');
 
-const HomePage = () => {
+const HomePage = ({ navigation }) => {
   const items = [
     {
       id: 1,
@@ -119,7 +119,7 @@ const HomePage = () => {
           <TouchableOpacity style={styles.navItem}>
             <Image source={require('./static/images/heart 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
+          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Sell')}>
             <Image source={require('./static/images/store 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>

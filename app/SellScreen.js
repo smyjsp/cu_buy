@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, TextInput, ScrollView, SafeAreaVie
 import * as ImagePicker from 'expo-image-picker';
 import styles from './sellscreen_style';
 
-const SellScreen = () => {
+const SellScreen = ({ navigation }) => {
   const [images, setImages] = useState([null, null, null]); // 3 image slots
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -93,7 +93,10 @@ const SellScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.closeButton}>
+        <TouchableOpacity 
+            style={styles.closeButton} 
+            onPress={() => navigation.goBack()}
+          >
           <Text>✕</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Sell an Item</Text>

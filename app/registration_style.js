@@ -124,6 +124,20 @@ const styles = StyleSheet.create({
     borderRadius: width * 0.175,
     resizeMode: 'cover',
   },
+
+  signupContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  signupText: {
+    color: '#666',
+  },
+  signupLink: {
+    color: '#007AFF',
+    fontWeight: 'bold',
+  }
 });
 
 export default styles;

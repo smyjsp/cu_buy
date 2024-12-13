@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, SafeAreaVie
 import * as Animatable from 'react-native-animatable';
 import styles from './registration_style'; // Import styles from the external styles file
 
-const LoginScreen = ({isLoggedin, setIsLoggedin}) => {
+const LoginScreen = ({ navigation, setIsLoggedin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -96,6 +96,14 @@ const LoginScreen = ({isLoggedin, setIsLoggedin}) => {
           >
             <Text style={styles.registerButtonText}>Login</Text>
           </TouchableOpacity>
+
+          {/* Sign Up Link */}
+          <View style={styles.signupContainer}>
+            <Text style={styles.signupText}>Don't have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+              <Text style={styles.signupLink}>Sign up</Text>
+            </TouchableOpacity>
+          </View>
 
           {/* Add bottom padding for scrolling */}
           <View style={styles.bottomPadding} />
