@@ -11,29 +11,6 @@ from models.Item import Item
 
 app = Flask(__name__)
 
-# Add this new endpoint to get all items
-@app.route("/items", methods=["GET"])
-def get_items():
-    try:
-        with handler.session_scope() as session:
-            items = session.query(Item).all()
-            items_list = []
-            for item in items:
-                items_list.append({
-                    'id': item.id,
-                    'title': item.title,
-                    'price': item.price,
-                    'imageUrl': f'http://3.149.231.33/images/{item.uni}/{item.image_filename}',
-                    'description': item.description,
-                    'seller': item.seller_uni
-                })
-            return jsonify(items_list), 200
-    except Exception as e:
-        print("Error fetching items:", str(e))
-        return jsonify({
-            'status': 'error',
-            'message': 'Failed to fetch items'
-        }), 500
 # Add endpoint to post a new item
 @app.route("/items", methods=["POST"])
 def add_item():
@@ -219,9 +196,12 @@ def get_items():
             items_list = []
             for item in items:
                 items_list.append({
+                    'id': item.id,
                     'title': item.title,
                     'price': item.price,
-                    'imageUrl': f'http://3.149.231.33/images/{item.uni}/{item.image_filename}'
+                    'imageUrl': f'http://3.149.231.33/images/{item.uni}/{item.image_filename}',
+                    'description': item.description,
+                    'seller': item.seller_uni
                 })
             return jsonify(items_list), 200
     except Exception as e:
@@ -230,7 +210,6 @@ def get_items():
             'status': 'error',
             'message': 'Failed to fetch items'
         }), 500
-
 
 # Run the Flask app
 if __name__ == "__main__":

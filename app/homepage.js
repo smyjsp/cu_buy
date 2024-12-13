@@ -114,19 +114,19 @@ const HomePage = () => {
         {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
           <TouchableOpacity style={styles.navItem}>
-            <Image source={require('./static/images/store 2.png')} style={styles.navIcon} />
+            <Image source={require('./static/images/home(selected) 2.png')} style={styles.navIcon} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem}>
+            <Image source={require('./static/images/heart 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>
             <Image source={require('./static/images/store 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>
-            <Image source={require('./static/images/store 2.png')} style={styles.navIcon} />
+            <Image source={require('./static/images/chat 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>
-            <Image source={require('./static/images/store 2.png')} style={styles.navIcon} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <Image source={require('./static/images/store 2.png')} style={styles.navIcon} />
+            <Image source={require('./static/images/profile 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
