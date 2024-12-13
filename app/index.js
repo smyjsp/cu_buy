@@ -1,8 +1,8 @@
-import { Text, View } from "react-native";
-import RegistrationScreen from "./registration";
+import { View, Text, Image, ScrollView } from "react-native";
+import HomePage from "./homepage";
 
 export default function Index() {
   return (
-      <RegistrationScreen />
+      <HomePage />
   );
 }

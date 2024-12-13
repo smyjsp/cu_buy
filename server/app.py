@@ -1,9 +1,112 @@
 from flask import Flask, request, jsonify
 from SQLHandler import SQLAlchemyHandler
-from models import Base, User, Category, Item
 import os
+from datetime import datetime
+
+from models.base import Base
+from models.User import User
+from models.Category import Category
+from models.Item import Item
+
 
 app = Flask(__name__)
+
+# Add this new endpoint to get all items
+@app.route("/items", methods=["GET"])
+def get_items():
+    try:
+        with handler.session_scope() as session:
+            items = session.query(Item).all()
+            items_list = []
+            for item in items:
+                items_list.append({
+                    'id': item.id,
+                    'title': item.title,
+                    'price': item.price,
+                    'imageUrl': f'http://3.149.231.33/images/{item.uni}/{item.image_filename}',
+                    'description': item.description,
+                    'seller': item.seller_uni
+                })
+            return jsonify(items_list), 200
+    except Exception as e:
+        print("Error fetching items:", str(e))
+        return jsonify({
+            'status': 'error',
+            'message': 'Failed to fetch items'
+        }), 500
+# Add endpoint to post a new item
+@app.route("/items", methods=["POST"])
+def add_item():
+    try:
+        data = {
+            'title': request.form.get('title'),
+            'price': float(request.form.get('price')),
+            'description': request.form.get('description'),
+            'seller_uni': request.form.get('uni')
+        }
+
+        if 'image' not in request.files:
+            return jsonify({
+                'status': 'error',
+                'message': 'No image provided'
+            }), 400
+
+        image = request.files['image']
+        
+        # Create directory for item images if it doesn't exist
+        image_dir = f"./data/{data['seller_uni']}/items"
+        os.makedirs(image_dir, exist_ok=True)
+
+        # Generate unique filename
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"item_{timestamp}.jpg"
+        image_path = os.path.join(image_dir, filename)
+        
+        # Save image
+        image.save(image_path)
+
+        with handler.session_scope() as session:
+            new_item = Item(
+                title=data['title'],
+                price=data['price'],
+                description=data['description'],
+                seller_uni=data['seller_uni'],
+                image_filename=filename
+            )
+            session.add(new_item)
+            session.commit()
+
+            return jsonify({
+                'status': 'success',
+                'message': 'Item added successfully',
+                'data': {
+                    'id': new_item.id,
+                    'title': new_item.title,
+                    'price': new_item.price,
+                    'imageUrl': f'http://3.149.231.33/images/{new_item.seller_uni}/{filename}',
+                    'description': new_item.description
+                }
+            }), 201
+
+    except Exception as e:
+        print("Error adding item:", str(e))
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
+
+# Add endpoint to serve images
+@app.route("/images/<uni>/<filename>")
+def serve_image(uni, filename):
+    return send_from_directory(f"./data/{uni}", filename)
+
+# Add endpoint to serve item images
+@app.route("/images/<uni>/items/<filename>")
+def serve_item_image(uni, filename):
+    return send_from_directory(f"./data/{uni}/items", filename)
+
+
+
 
 # Configuration
 DATABASE_URL = os.environ.get('DATABASE_URL_USERS', 'mysql+pymysql://root:your_password@127.0.0.1:3306/users')
@@ -91,6 +194,27 @@ def register():
             'status': 'error',
             'message': str(e)
         }), 400
+
+@app.route("/items", methods=["GET"])
+def get_items():
+    try:
+        with handler.session_scope() as session:
+            items = session.query(Item).all()
+            items_list = []
+            for item in items:
+                items_list.append({
+                    'title': item.title,
+                    'price': item.price,
+                    'imageUrl': f'http://3.149.231.33/images/{item.uni}/{item.image_filename}'
+                })
+            return jsonify(items_list), 200
+    except Exception as e:
+        print("Error fetching items:", str(e))
+        return jsonify({
+            'status': 'error',
+            'message': 'Failed to fetch items'
+        }), 500
+
 
 # Run the Flask app
 if __name__ == "__main__":
