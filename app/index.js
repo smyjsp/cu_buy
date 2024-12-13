@@ -1,7 +1,7 @@
 import { View, Text, Image, ScrollView } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import HomePage from "./homepage"; // homepage screen
 import RegistrationScreen from "./registration"; // registration screen
 import LoginScreen from './LoginScreen'; // Your login screen
@@ -11,6 +11,9 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(false);
+  useEffect(() => {
+    setIsLoggedin(true);
+  }, []);
 
   return (
     <Stack.Navigator initialRouteName="Login"

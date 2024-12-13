@@ -9,12 +9,20 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config":{
+        "googleMapsApiKey": "AIzaSyCozYDFbjQRzYoiWrt8ApN2uZYNBECYG4E"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "config":{
+        "googleMaps":{
+          "apiKey": "AIzaSyCozYDFbjQRzYoiWrt8ApN2uZYNBECYG4E"
+        }
       }
     },
     "web": {
@@ -31,6 +39,12 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysPermission": "Allow $(CUBuy) to use your location."
         }
       ]
     ],
