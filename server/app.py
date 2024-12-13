@@ -127,6 +127,22 @@ def home():
 def about():
     return "This is a basic Flask server!"
 
+@app.route("/login", methods=["POST"])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')  # 假设密码是明文传输，实际应用中应使用加密传输
+
+    if not email or not password:
+        return jsonify({'status': 'error', 'message': 'Missing email or password'}), 400
+
+    with handler.session_scope() as session:
+        user = handler.get_user_by_email(session, email)
+        if user and user.password == password:
+            return jsonify({'status': 'success', 'message': 'Login successful'}), 200
+        else:
+            return jsonify({'status': 'error', 'message': 'Invalid credentials'}), 401
+
+
 @app.route("/register", methods=["POST"])
 def register():
     try:

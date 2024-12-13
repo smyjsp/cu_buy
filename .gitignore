@@ -59,4 +59,5 @@ expo-env.d.ts
 CUBuy.pem
 *.key
 *.pem
+*.pem.pub
 id_rsa.pub
