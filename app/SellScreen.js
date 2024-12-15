@@ -75,7 +75,6 @@ const SellScreen = ({ navigation, route }) => {
       aspect: [1, 1],
       quality: 0.8,
     });
-    console.log("pickImage pressed!!!!!!!!!")
 
     if (!result.canceled) {
       const newImages = [...images];
@@ -109,7 +108,6 @@ const SellScreen = ({ navigation, route }) => {
       formData.append('pickup_end_datetime', endDateTime ? endDateTime.toISOString() : '');
       formData.append('category', 1);
       formData.append('user_id', loginAs);
-      console.log('formData', formData);
 
 
       // Append all non-null images
@@ -118,7 +116,6 @@ const SellScreen = ({ navigation, route }) => {
           const imageName = imageUri.split('/').pop();
           // Get file extension from the image URI
           const fileExtension = imageName.split('.').pop().toLowerCase();
-          console.log('fileExtension', fileExtension);
           // Determine MIME type based on file extension
           let mimeType;
           switch (fileExtension) {
@@ -146,7 +143,6 @@ const SellScreen = ({ navigation, route }) => {
           });
         }
       });
-      console.log('formData', formData);
       const response = await fetch('http://3.149.231.33/items', {
         method: 'POST',
         body: formData,
@@ -446,7 +442,6 @@ const SellScreen = ({ navigation, route }) => {
                     <GooglePlacesAutocomplete
                       placeholder='Search for a location'
                       onPress={(data, details = null) => {
-                        console.log('onPress triggered');
                         if (details) handlePlaceSelect(data, details);
                       }}
                       query={{

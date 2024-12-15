@@ -276,7 +276,8 @@ def get_items():
                     'pickup_start_datetime': item.pickup_start_datetime.isoformat() if item.pickup_start_datetime else None,
                     'pickup_end_datetime': item.pickup_end_datetime.isoformat() if item.pickup_end_datetime else None,
                     'category_id': item.category_id,
-                    'location': item.transaction_location
+                    'location': item.transaction_location,
+                    'sold': item.sold
                 })
             return jsonify(items_list), 200
     except Exception as e:
@@ -290,13 +291,61 @@ def get_items():
 def get_user(user_id):
     with handler.session_scope() as session:
         user = handler.get_user_by_id(session, user_id)
+        
+        # Initialize profile_image as None
+        profile_image = None
+        
+        # Try to read and encode the profile image if it exists
+        if user.profile_image_url:
+            try:
+                with open(user.profile_image_url, "rb") as img_file:
+                    profile_image = base64.b64encode(img_file.read()).decode('utf-8')
+            except Exception as e:
+                print(f"Error reading profile image: {str(e)}")
+
         return jsonify({
             'name': user.name,
             'email': user.email,
             'uni': user.uni,
+            'profile_image': profile_image,  # Send the base64 encoded image
             'profile_image_url': user.profile_image_url,
             'id_card_image_url': user.id_card_image_url
         }), 200
+        
+@app.route("/user/<user_id>/items", methods=["GET"])
+def get_user_items(user_id):
+    with handler.session_scope() as session:
+        items = session.query(Item).filter(Item.user_id == user_id).all()
+        items_list = []
+        for item in items:
+            # Convert images to base64
+            images = []
+            if item.image_url:
+                for img_path in item.image_url.split(','):
+                    img_path = img_path.strip()
+                    try:
+                        with open(img_path, "rb") as img_file:
+                            img_data = base64.b64encode(img_file.read()).decode('utf-8')
+                            images.append(img_data)
+                    except Exception as img_error:
+                        print(f"Error reading image {img_path}: {str(img_error)}")
+            
+            items_list.append({
+                'id': item.id,
+                'title': item.title,
+                'price': float(item.price),
+                'images': images,
+                'description': item.description,
+                'condition': item.condition,
+                'location': item.transaction_location,
+                'pickup_start_datetime': item.pickup_start_datetime.isoformat() if item.pickup_start_datetime else None,
+                'pickup_end_datetime': item.pickup_end_datetime.isoformat() if item.pickup_end_datetime else None,
+                'category_id': item.category_id,
+                'user_id': item.user_id,
+                'sold': item.sold
+            })
+        
+        return jsonify(items_list), 200
 
 # Run the Flask app
 if __name__ == "__main__":

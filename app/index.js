@@ -5,6 +5,7 @@ import RegistrationScreen from "./registration"; // registration screen
 import LoginScreen from './LoginScreen'; // Your login screen
 import SellScreen from './SellScreen'; // sell screen
 import ItemDetail from './itemdetail';
+import Personal from './personal';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,11 @@ const App = () => {
           <Stack.Screen 
             name="ItemDetail" 
             component={ItemDetail}
+          />
+          <Stack.Screen 
+            name="Personal" 
+            component={Personal}
+            initialParams={{ loginAs: loginAs, setIsLoggedin: setIsLoggedin, isLoggedin: isLoggedin }}
           />
         </>
       ) : (

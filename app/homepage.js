@@ -27,7 +27,6 @@ const HomePage = ({ navigation, route }) => {
       }
       
       const data = await response.json();
-      console.log('homepage.js',data[0].location);
       setItems(data);
     } catch (error) {
       console.error('Error fetching items:', error);
@@ -131,7 +130,9 @@ const HomePage = ({ navigation, route }) => {
           <TouchableOpacity style={styles.navItem}>
             <Image source={require('./static/images/chat 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
+          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Personal', {
+            loginAs: loginAs,
+          })}>
             <Image source={require('./static/images/profile 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
         </View>

@@ -14,15 +14,17 @@ import MapView, { Marker } from 'react-native-maps';
 import styles from './itemdetailcss';
 const ItemDetail = ({ route, navigation }) => {
   const { item } = route.params;
-  console.log('itemdetail.js',item.location);
+  const { loginAs } = route.params;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [location, setLocation] = useState(null);
 
   useEffect(() => {
     if (item.location) {
       try {
+        console.log('Item title:', item.title, typeof item.location);
+        console.log('Item location:', item.location, typeof item.location);
         const locationObj = JSON.parse(item.location);
-        console.log('itemdetail.js location object:', locationObj);
+        console.log('After parsing:', locationObj, typeof locationObj);
         setLocation(locationObj);
       } catch (error) {
         console.error('Error parsing location:', error);
@@ -41,8 +43,6 @@ const ItemDetail = ({ route, navigation }) => {
             },
         });
         const seller_info = await response.json();
-        console.log('seller_info11', seller_info);
-
         Alert.alert(
             'Contact Seller',
             'Would you like to email the seller?',
@@ -66,6 +66,27 @@ const ItemDetail = ({ route, navigation }) => {
     } catch (error) {
         console.error('Error fetching seller info:', error);
         Alert.alert('Error', 'Unable to contact seller at this time');
+    }
+  };
+
+  const handleMarkAsSold = async () => {
+    try {
+        const response = await fetch(`http://3.149.231.33/items/${item.id}/sold`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        });
+        if (response.ok) {
+            Alert.alert('Success', 'Item marked as sold');
+            navigation.goBack();
+        } else {
+            Alert.alert('Error', 'Failed to mark item as sold');
+        }
+    } catch (error) {
+        console.error('Error marking item as sold:', error);
+        Alert.alert('Error', 'Failed to mark item as sold');
     }
   };
 
@@ -175,13 +196,22 @@ const ItemDetail = ({ route, navigation }) => {
           </View>
         )}
 
-        {/* Contact seller button */}
-        <TouchableOpacity 
-          style={styles.contactButton}
-          onPress={handleContactSeller}
-        >
-          <Text style={styles.contactButtonText}>Contact Seller</Text>
-        </TouchableOpacity>
+        {/* Conditional rendering of bottom button */}
+        {loginAs === item.seller_id ? (
+          <TouchableOpacity 
+            style={[styles.contactButton, { backgroundColor: '#4CAF50' }]}
+            onPress={handleMarkAsSold}
+          >
+            <Text style={styles.contactButtonText}>Mark as Sold</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity 
+            style={styles.contactButton}
+            onPress={handleContactSeller}
+          >
+            <Text style={styles.contactButtonText}>Contact Seller</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
