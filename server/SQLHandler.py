@@ -80,3 +80,9 @@ class SQLAlchemyHandler:
     
     def get_user_by_email(self, session, email):
         return session.query(User).filter(User.email == email).first()
+
+    def get_user_by_id(self, session, user_id):
+        return session.query(User).get(user_id)
+    
+    def get_user_by_uni(self, session, uni):
+        return session.query(User).filter(User.uni == uni).first()

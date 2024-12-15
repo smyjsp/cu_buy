@@ -3,7 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, SafeAreaVie
 import * as Animatable from 'react-native-animatable';
 import styles from './registration_style'; // Import styles from the external styles file
 
-const LoginScreen = ({ navigation, setIsLoggedin }) => {
+const LoginScreen = ({ navigation, route }) => {
+  const { setIsLoggedin, setLoginAs } = route.params;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +34,9 @@ const LoginScreen = ({ navigation, setIsLoggedin }) => {
   
       if (response.ok) {
         Alert.alert('Success', 'Login successful');
+        user = data.data;
+        console.log(user);
+        setLoginAs(user);
         setIsLoggedin(true);
       } else {
         throw new Error(data.message || 'Login failed');

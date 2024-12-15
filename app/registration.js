@@ -6,7 +6,8 @@ import * as ImagePicker from 'expo-image-picker';
 import {Alert} from 'react-native';
 import * as ImageManipulator from 'expo-image-manipulator';
 
-const RegistrationScreen = ({loginAs, setLoginAs, setIsLoggedin}) => {
+const RegistrationScreen = ({navigation, route}) => {
+  const { setIsLoggedin, setLoginAs } = route.params;
   const [profileImage, setProfileImage] = useState(null);
   const [idImage, setIdImage] = useState(null);
   const [firstName, setFirstName] = useState('');

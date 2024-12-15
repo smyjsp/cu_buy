@@ -26,7 +26,7 @@ def add_item():
             'price': float(request.form.get('price')),
             'description': request.form.get('description'),
             'condition': request.form.get('condition'),
-            'user_id': 1,
+            'user_id': request.form.get('user_id'),
             'transaction_location': transaction_location,
             'pickup_start_datetime': request.form.get('pickup_start_datetime'),
             'pickup_end_datetime': request.form.get('pickup_end_datetime'),
@@ -46,11 +46,12 @@ def add_item():
                 'status': 'error',
                 'message': 'No image provided'
             }), 400
-        # HARD CODED FOR NOW
-        data['uni'] = 'lol9999'
         # Create directory for item images if it doesn't exist
-        image_dir = f"./data/{data['uni']}/items"
-        os.makedirs(image_dir, exist_ok=True)
+        with handler.session_scope() as session:
+            user = handler.get_user_by_id(session=session, user_id=data['user_id'])
+            uni = user.uni
+            image_dir = f"./data/{uni}/items"
+            os.makedirs(image_dir, exist_ok=True)
 
         # Generate base filename with timestamp
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -146,7 +147,7 @@ def about():
 @app.route("/login", methods=["POST"])
 def login():
     email = request.form.get('email')
-    password = request.form.get('password')  # 假设密码是明文传输，实际应用中应使用加密传输
+    password = request.form.get('password')
 
     if not email or not password:
         return jsonify({'status': 'error', 'message': 'Missing email or password'}), 400
@@ -154,7 +155,7 @@ def login():
     with handler.session_scope() as session:
         user = handler.get_user_by_email(session, email)
         if user and user.password == password:
-            return jsonify({'status': 'success', 'message': 'Login successful', 'data': user.to_dict()}), 200
+            return jsonify({'status': 'success', 'message': 'Login successful', 'data': user.id}), 200
         else:
             return jsonify({'status': 'error', 'message': 'Invalid credentials'}), 401
 

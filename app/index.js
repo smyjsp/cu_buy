@@ -10,9 +10,9 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [loginAs, setLoginAs] = useState('');
-  useEffect(() => {
-    setIsLoggedin(true);
-  }, []);
+  // useEffect(() => {
+  //   setIsLoggedin(true);
+  // }, []);
 
   return (
     <Stack.Navigator initialRouteName="Login"
@@ -22,15 +22,21 @@ const App = () => {
     >
       {isLoggedin ? (
         <>
-          <Stack.Screen name="Home" {...props} loginAs={loginAs} setLoginAs={setLoginAs} isLoggedin={isLoggedin}
+          <Stack.Screen 
+            name="Home" 
+            component={HomePage}
+            initialParams={{ loginAs: loginAs, setLoginAs: setLoginAs, isLoggedin: isLoggedin }}
             screenOptions={{
               headerShown: false
             }}
           />
-          <Stack.Screen name="Sell" component={SellScreen} 
+          <Stack.Screen 
+            name="Sell" 
+            component={SellScreen} 
+            initialParams={{ loginAs: loginAs}}
             options={{
-                presentation: 'modal',
-                animation: 'slide_from_bottom'
+              presentation: 'modal',
+              animation: 'slide_from_bottom'
             }}
             screenOptions={{
               headerShown: false
@@ -41,27 +47,16 @@ const App = () => {
         <>
           <Stack.Screen 
             name="Login" 
-            options={{ headerShown: false }}>
-            {props => (
-              <LoginScreen 
-                {...props}
-                setIsLoggedin={setIsLoggedin}
-              />
-            )}
-          </Stack.Screen>
+            component={LoginScreen}
+            initialParams={{ setIsLoggedin: setIsLoggedin, setLoginAs: setLoginAs }}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen 
             name="Register" 
+            component={RegistrationScreen}
+            initialParams={{ loginAs: loginAs, setLoginAs: setLoginAs, setIsLoggedin: setIsLoggedin }}
             options={{ headerShown: false }}
-          >
-            {props => (
-              <RegistrationScreen 
-                {...props}
-                loginAs={loginAs}
-                setLoginAs={setLoginAs}
-                setIsLoggedin={setIsLoggedin}
-              />
-            )}
-          </Stack.Screen>
+          />
         </>
       )}
     </Stack.Navigator>

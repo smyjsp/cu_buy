@@ -10,7 +10,8 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { FlatList } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native';
 
-const SellScreen = ({ navigation }) => {
+const SellScreen = ({ navigation, route }) => {
+  const { loginAs } = route.params;
   const [images, setImages] = useState([null, null, null]); // 3 image slots
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -107,7 +108,7 @@ const SellScreen = ({ navigation }) => {
       formData.append('pickup_start_datetime', startDateTime ? startDateTime.toISOString() : '');
       formData.append('pickup_end_datetime', endDateTime ? endDateTime.toISOString() : '');
       formData.append('category', 1);
-
+      formData.append('user_id', loginAs);
       console.log('formData', formData);
 
 

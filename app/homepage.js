@@ -4,7 +4,8 @@ import styles from './homepage_style';
 
 const { width } = Dimensions.get('window');
 
-const HomePage = ({ navigation, loginAs, setLoginAs, isLoggedin }) => {
+const HomePage = ({ navigation, route }) => {
+  const { loginAs, setLoginAs, isLoggedin } = route.params;
   const items = [
     {
       id: 1,
