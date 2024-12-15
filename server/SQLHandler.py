@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from contextlib import contextmanager
-from models import Base, User  # Import your Base and all models here
+from models import Base, User, Item  # Import your Base and all models here
 
 
 class SQLAlchemyHandler:
@@ -86,3 +86,12 @@ class SQLAlchemyHandler:
     
     def get_user_by_uni(self, session, uni):
         return session.query(User).filter(User.uni == uni).first()
+    
+    def get_unsold_items(self, session):
+        return session.query(Item).filter(Item.sold == 0).all()
+
+    def get_sold_items(self, session):
+        return session.query(Item).filter(Item.sold == 1).all()
+    
+    def get_item_by_id(self, session, item_id):
+        return session.query(Item).get(item_id)

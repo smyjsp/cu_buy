@@ -21,10 +21,9 @@ const ItemDetail = ({ route, navigation }) => {
   useEffect(() => {
     if (item.location) {
       try {
-        console.log('Item title:', item.title, typeof item.location);
-        console.log('Item location:', item.location, typeof item.location);
-        const locationObj = JSON.parse(item.location);
-        console.log('After parsing:', locationObj, typeof locationObj);
+        const locationObj = typeof item.location === 'string' 
+          ? JSON.parse(item.location) 
+          : item.location;
         setLocation(locationObj);
       } catch (error) {
         console.error('Error parsing location:', error);
@@ -103,17 +102,10 @@ const ItemDetail = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Header with back button */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backButtonText}>←</Text>
-        </TouchableOpacity>
+        {/* Header content */}
       </View>
 
-      {/* Image carousel */}
       <View style={styles.imageContainer}>
         <ScrollView
           horizontal
@@ -135,7 +127,6 @@ const ItemDetail = ({ route, navigation }) => {
             />
           ))}
         </ScrollView>
-        {/* Image indicators */}
         <View style={styles.indicatorContainer}>
           {item.images.map((_, index) => (
             <View
@@ -149,55 +140,48 @@ const ItemDetail = ({ route, navigation }) => {
         </View>
       </View>
 
-      {/* Item details */}
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.price}>${item.price}</Text>
         <Text style={styles.condition}>Condition: {item.condition}</Text>
-        
+      </View>
+
+      <View style={styles.descriptionSection}>
         <Text style={styles.sectionTitle}>Description</Text>
         <Text style={styles.description}>{item.description}</Text>
+      </View>
 
+      <View style={styles.pickupSection}>
         <Text style={styles.sectionTitle}>Pickup Time</Text>
-        <Text style={styles.pickupTime}>
-          From: {formatDateTime(item.pickup_start_datetime)}
-        </Text>
-        <Text style={styles.pickupTime}>
-          To: {formatDateTime(item.pickup_end_datetime)}
-        </Text>
+        <Text style={styles.pickupTime}>From: {formatDateTime(item.pickup_start_datetime)}</Text>
+        <Text style={styles.pickupTime}>To: {formatDateTime(item.pickup_end_datetime)}</Text>
+      </View>
 
+      <View style={styles.locationSection}>
         <Text style={styles.sectionTitle}>Pickup Location</Text>
-        {location ? (
-          <Text style={styles.address}>
-            {location.place_address ? location.place_address : 
-             (location.formatted_address ? location.formatted_address : "Address not available")}
-          </Text>
-        ) : (
-          <Text style={styles.address}>Loading address...</Text>
-        )}
-        {location && (
-          <View style={styles.mapContainer}>
-            <MapView
-              style={styles.map}
-              initialRegion={{
-                latitude: location.latitude,
-                longitude: location.longitude,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
+        <Text style={styles.address}>{location?.place_address}</Text>
+        <View style={styles.mapContainer}>
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: location?.latitude,
+              longitude: location?.longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}
+          >
+            <Marker
+              coordinate={{
+                latitude: location?.latitude,
+                longitude: location?.longitude,
               }}
-            >
-              <Marker
-                coordinate={{
-                  latitude: location.latitude,
-                  longitude: location.longitude,
-                }}
-              />
-            </MapView>
-          </View>
-        )}
+            />
+          </MapView>
+        </View>
+      </View>
 
-        {/* Conditional rendering of bottom button */}
-        {loginAs === item.seller_id ? (
+      <View style={styles.buttonSection}>
+        {loginAs === item.user_id ? (
           <TouchableOpacity 
             style={[styles.contactButton, { backgroundColor: '#4CAF50' }]}
             onPress={handleMarkAsSold}
