@@ -277,7 +277,8 @@ def get_items():
                     'pickup_end_datetime': item.pickup_end_datetime.isoformat() if item.pickup_end_datetime else None,
                     'category_id': item.category_id,
                     'location': item.transaction_location,
-                    'sold': item.sold
+                    'sold': item.sold,
+                    'user_id': item.user_id
                 })
             return jsonify(items_list), 200
     except Exception as e:

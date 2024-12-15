@@ -100,6 +100,9 @@ const ItemDetail = ({ route, navigation }) => {
     });
   };
 
+  console.log('Current user (loginAs):', loginAs);
+  console.log('Item seller (user_id):', item.user_id);
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -121,7 +124,11 @@ const ItemDetail = ({ route, navigation }) => {
           {item.images.map((image, index) => (
             <Image
               key={index}
-              source={{ uri: image }}
+              source={{ 
+                uri: image.startsWith('data:') 
+                  ? image 
+                  : `data:image/jpeg;base64,${image}`
+              }}
               style={styles.image}
               resizeMode="cover"
             />

@@ -86,10 +86,8 @@ const HomePage = ({ navigation, route }) => {
               key={item.id}
               style={styles.itemCard}
               onPress={() => navigation.navigate('ItemDetail', { 
-                item: {
-                  ...item,
-                  images: item.images.map(img => `data:image/jpeg;base64,${img}`),
-                }
+                item: item,
+                loginAs: loginAs
               })}
             >
               {item.images && item.images.length > 0 ? (

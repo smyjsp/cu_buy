@@ -18,6 +18,7 @@ class Item(Base):
     pickup_start_datetime = Column(TIMESTAMP, nullable=True)
     pickup_end_datetime = Column(TIMESTAMP, nullable=True)
     posted_at = Column(TIMESTAMP, default=func.current_timestamp())
+    sold = Column(Integer, default=0)
 
     category = relationship("Category", back_populates="items")
     user = relationship("User", back_populates="items")
