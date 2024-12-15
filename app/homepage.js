@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity, TextInput, StyleSheet, SafeAreaView, Dimensions, Platform, StatusBar } from 'react-native';
 import styles from './homepage_style';
 
@@ -6,44 +6,32 @@ const { width } = Dimensions.get('window');
 
 const HomePage = ({ navigation, route }) => {
   const { loginAs, setLoginAs, isLoggedin } = route.params;
-  const items = [
-    {
-      id: 1,
-      title: 'ECON BC1003 Textbook',
-      price: '$50',
-      //image: require('./static/images/store 2.png')
-    },
-    {
-      id: 2,
-      title: 'Bean Bag',
-      price: '$30',
-      //image: require('./static/images/store 2.png')
-    },
-    {
-      id: 3,
-      title: 'Used PS4 Pro',
-      price: '$300',
-      //image: require("./static/images/store 2.png")
-    },
-    {
-      id: 4,
-      title: 'Food scale',
-      price: '$10',
-      //image: require("./static/images/store 2.png")
-    },
-    {
-      id: 5,
-      title: 'Zelda BOTW',
-      price: '$45',
-      //image: require('./static/images/store 2.png')
-    },
-    {
-      id: 6,
-      title: 'Zelda BOTW',
-      price: '$45',
-      //image: require('./static/images/store 2.png')
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+
+  const fetchItems = async () => {
+    try {
+      const response = await fetch('http://3.149.231.33/items', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      const data = await response.json();
+      setItems(data);
+    } catch (error) {
+      console.error('Error fetching items:', error);
     }
-  ];
+  };
 
   const categories = ['For you', 'Categories', 'Nearby', 'Recently viewed'];
 
@@ -99,14 +87,20 @@ const HomePage = ({ navigation, route }) => {
               style={styles.itemCard}
               onPress={() => console.log(`Clicked ${item.title}`)}
             >
-              <Image
-                source={item.image}
-                style={styles.itemImage}
-                resizeMode="cover"
-              />
+              {item.images && item.images.length > 0 ? (
+                <Image
+                  source={{ uri: `data:image/jpeg;base64,${item.images[0]}` }}
+                  style={styles.itemImage}
+                  resizeMode="cover"
+                />
+              ) : (
+                <View style={[styles.itemImage, styles.noImage]}>
+                  <Text>No Image</Text>
+                </View>
+              )}
               <View style={styles.itemInfo}>
-                <Text style={styles.itemTitle}>{item.title}</Text>
-                <Text style={styles.itemPrice}>{item.price}</Text>
+                <Text style={styles.itemTitle} numberOfLines={1}>{item.title}</Text>
+                <Text style={styles.itemPrice}>${item.price}</Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -120,7 +114,12 @@ const HomePage = ({ navigation, route }) => {
           <TouchableOpacity style={styles.navItem}>
             <Image source={require('./static/images/heart 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Sell')}>
+          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Sell',{
+            loginAs: loginAs,
+            onListingSuccess: () =>{
+              fetchItems();
+            }
+          })}>
             <Image source={require('./static/images/store 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>

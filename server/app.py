@@ -3,6 +3,7 @@ from SQLHandler import SQLAlchemyHandler
 import os
 from datetime import datetime
 import json
+import base64  # Add this at the top of the file
 
 from models.base import Base
 from models.User import User
@@ -235,13 +236,30 @@ def get_items():
             items = session.query(Item).all()
             items_list = []
             for item in items:
+                # Convert images to base64
+                images = []
+                if item.image_url:
+                    for img_path in item.image_url.split(','):
+                        img_path = img_path.strip()
+                        try:
+                            with open(img_path, "rb") as img_file:
+                                img_data = base64.b64encode(img_file.read()).decode('utf-8')
+                                images.append(img_data)
+                        except Exception as img_error:
+                            print(f"Error reading image {img_path}: {str(img_error)}")
+                
                 items_list.append({
                     'id': item.id,
                     'title': item.title,
                     'price': item.price,
-                    'imageUrl': f'http://3.149.231.33/images/{item.uni}/{item.image_filename}',
+                    'images': images,
                     'description': item.description,
-                    'seller': item.seller_uni
+                    'seller': item.user.uni,
+                    'seller_id': item.user.id,
+                    'pickup_start_datetime': item.pickup_start_datetime.isoformat() if item.pickup_start_datetime else None,
+                    'pickup_end_datetime': item.pickup_end_datetime.isoformat() if item.pickup_end_datetime else None,
+                    'category_id': item.category_id,
+                    'location': item.transaction_location
                 })
             return jsonify(items_list), 200
     except Exception as e:
@@ -250,6 +268,16 @@ def get_items():
             'status': 'error',
             'message': 'Failed to fetch items'
         }), 500
+
+@app.route("/clear_items", methods=["POST"])
+def clear_items():
+    try:
+        with handler.session_scope() as session:
+            session.query(Item).delete()
+            session.commit()
+            return jsonify({'status': 'success', 'message': 'All items cleared'}), 200
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 # Run the Flask app
 if __name__ == "__main__":

@@ -60,19 +60,21 @@ const styles = StyleSheet.create({
     },
     itemImage: {
       width: '100%',
-      height: (width - 30) / 2,
+      height: 150,
+      borderRadius: 8,
     },
     itemInfo: {
-      padding: 10,
+      padding: 8,
     },
     itemTitle: {
       fontSize: 14,
-      marginBottom: 5,
+      fontWeight: '500',
     },
     itemPrice: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: '#4285F4',
+      fontSize: 14,
+      fontWeight: '600',
+      color: '#2E8B57',
+      marginTop: 4,
     },
     bottomNav: {
       flexDirection: 'row',
@@ -88,7 +90,12 @@ const styles = StyleSheet.create({
     navIcon: {
       width: 24,
       height: 24,
-    }
+    },
+    noImage: {
+      backgroundColor: '#f0f0f0',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   });
   
   export default styles;
