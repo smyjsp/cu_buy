@@ -537,6 +537,22 @@ const styles = StyleSheet.create({
   timeTextDisabled: {
     color: '#999',
   },
+  aiButton: {
+    backgroundColor: '#007AFF',
+    padding: 12,
+    borderRadius: 8,
+    marginHorizontal: 16,
+    marginTop: 16,  // Added margin top
+    marginBottom: 16, // Added margin bottom
+    alignItems: 'center',
+    width: '90%',  // Make it wider
+    alignSelf: 'center', // Center the button
+  },
+  aiButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });
 
 export default styles;

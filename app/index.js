@@ -1,5 +1,3 @@
-import { View, Text, Image, ScrollView } from "react-native";
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
 import HomePage from "./homepage"; // homepage screen
@@ -11,6 +9,7 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(false);
+  const [loginAs, setLoginAs] = useState('');
   useEffect(() => {
     setIsLoggedin(true);
   }, []);
@@ -23,7 +22,7 @@ const App = () => {
     >
       {isLoggedin ? (
         <>
-          <Stack.Screen name="Home" component={HomePage} 
+          <Stack.Screen name="Home" {...props} loginAs={loginAs} setLoginAs={setLoginAs} isLoggedin={isLoggedin}
             screenOptions={{
               headerShown: false
             }}
@@ -52,9 +51,17 @@ const App = () => {
           </Stack.Screen>
           <Stack.Screen 
             name="Register" 
-            component={RegistrationScreen} 
             options={{ headerShown: false }}
-          />
+          >
+            {props => (
+              <RegistrationScreen 
+                {...props}
+                loginAs={loginAs}
+                setLoginAs={setLoginAs}
+                setIsLoggedin={setIsLoggedin}
+              />
+            )}
+          </Stack.Screen>
         </>
       )}
     </Stack.Navigator>

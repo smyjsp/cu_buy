@@ -1,7 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from SQLHandler import SQLAlchemyHandler
 import os
 from datetime import datetime
+import json
 
 from models.base import Base
 from models.User import User
@@ -15,41 +16,73 @@ app = Flask(__name__)
 @app.route("/items", methods=["POST"])
 def add_item():
     try:
+        # Parse transaction_location from JSON string
+        transaction_location = request.form.get('transaction_location')
+        if transaction_location:
+            transaction_location = json.loads(transaction_location)
+
         data = {
             'title': request.form.get('title'),
             'price': float(request.form.get('price')),
             'description': request.form.get('description'),
-            'seller_uni': request.form.get('uni')
+            'condition': request.form.get('condition'),
+            'user_id': 1,
+            'transaction_location': transaction_location,
+            'pickup_start_datetime': request.form.get('pickup_start_datetime'),
+            'pickup_end_datetime': request.form.get('pickup_end_datetime'),
+            'category_id': request.form.get('category')
         }
 
-        if 'image' not in request.files:
+        # Validate condition is one of the allowed values
+        if data['condition'].lower() not in ['like new', 'good', 'fair', 'poor']:
+            return jsonify({
+                'status': 'error',
+                'message': 'Invalid condition value: ' + data['condition']
+            }), 400
+
+        # Check for at least one image
+        if 'image1' not in request.files:
             return jsonify({
                 'status': 'error',
                 'message': 'No image provided'
             }), 400
-
-        image = request.files['image']
-        
+        # HARD CODED FOR NOW
+        data['uni'] = 'lol9999'
         # Create directory for item images if it doesn't exist
-        image_dir = f"./data/{data['seller_uni']}/items"
+        image_dir = f"./data/{data['uni']}/items"
         os.makedirs(image_dir, exist_ok=True)
 
-        # Generate unique filename
+        # Generate base filename with timestamp
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"item_{timestamp}.jpg"
-        image_path = os.path.join(image_dir, filename)
         
-        # Save image
-        image.save(image_path)
+        # Save each image with a unique filename
+        image_filenames = []
+        for i in range(1, 4):
+            image_key = f'image{i}'
+            if image_key in request.files and request.files[image_key]:
+                image = request.files[image_key]
+                filename = f"item_{timestamp}_{i}.jpg"
+                image_path = os.path.join(image_dir, filename)
+                image.save(image_path)
+                image_filenames.append(image_path)
+                
+        # Concatenate image_filenames into a single string
+        image_urls = ', '.join(image_filenames)
 
         with handler.session_scope() as session:
             new_item = Item(
                 title=data['title'],
-                price=data['price'],
                 description=data['description'],
-                seller_uni=data['seller_uni'],
-                image_filename=filename
+                condition=data['condition'].lower(),
+                price=data['price'],
+                category_id=int(data['category_id']) if data['category_id'] else None,
+                user_id=data['user_id'],
+                image_url=image_urls,
+                transaction_location=json.dumps(data['transaction_location']) if data['transaction_location'] else None,
+                pickup_start_datetime=datetime.fromisoformat(data['pickup_start_datetime'].replace('Z', '+00:00')) if data['pickup_start_datetime'] else None,
+                pickup_end_datetime=datetime.fromisoformat(data['pickup_end_datetime'].replace('Z', '+00:00')) if data['pickup_end_datetime'] else None
             )
+            
             session.add(new_item)
             session.commit()
 
@@ -59,9 +92,15 @@ def add_item():
                 'data': {
                     'id': new_item.id,
                     'title': new_item.title,
-                    'price': new_item.price,
-                    'imageUrl': f'http://3.149.231.33/images/{new_item.seller_uni}/{filename}',
-                    'description': new_item.description
+                    'price': float(new_item.price),
+                    'imageUrls': [f'http://3.149.231.33/images/items/{filename}' 
+                                for filename in image_filenames],
+                    'description': new_item.description,
+                    'condition': new_item.condition,
+                    'transaction_location': new_item.transaction_location,
+                    'pickup_start_datetime': new_item.pickup_start_datetime.isoformat() if new_item.pickup_start_datetime else None,
+                    'pickup_end_datetime': new_item.pickup_end_datetime.isoformat() if new_item.pickup_end_datetime else None,
+                    'category_id': new_item.category_id
                 }
             }), 201
 
@@ -115,7 +154,7 @@ def login():
     with handler.session_scope() as session:
         user = handler.get_user_by_email(session, email)
         if user and user.password == password:
-            return jsonify({'status': 'success', 'message': 'Login successful'}), 200
+            return jsonify({'status': 'success', 'message': 'Login successful', 'data': user.to_dict()}), 200
         else:
             return jsonify({'status': 'error', 'message': 'Invalid credentials'}), 401
 

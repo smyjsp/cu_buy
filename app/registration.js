@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {Alert} from 'react-native';
 import * as ImageManipulator from 'expo-image-manipulator';
 
-const RegistrationScreen = () => {
+const RegistrationScreen = ({loginAs, setLoginAs, setIsLoggedin}) => {
   const [profileImage, setProfileImage] = useState(null);
   const [idImage, setIdImage] = useState(null);
   const [firstName, setFirstName] = useState('');
@@ -236,7 +236,9 @@ const RegistrationScreen = () => {
       
       if (response.ok) {
         Alert.alert('Success', data.message);
-        
+        setIsLoggedin(true);
+        setLoginAs(response.get('loginAs'));
+        navigation.navigate('Home');
       } else {
         throw new Error(data.message || 'Registration failed');
       }

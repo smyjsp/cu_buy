@@ -15,6 +15,8 @@ class Item(Base):
     user_id = Column(Integer, ForeignKey('Users.id'))
     image_url = Column(String(255), nullable=True)
     transaction_location = Column(String(255), nullable=True)
+    pickup_start_datetime = Column(TIMESTAMP, nullable=True)
+    pickup_end_datetime = Column(TIMESTAMP, nullable=True)
     posted_at = Column(TIMESTAMP, default=func.current_timestamp())
 
     category = relationship("Category", back_populates="items")
