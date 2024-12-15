@@ -185,6 +185,7 @@ def register():
             'lastName': request.form.get('lastName', ''),
             'email': request.form.get('email', ''),
             'uni': request.form.get('uni', ''),
+            'password': request.form.get('password', '')
         }
         
         # File handling
@@ -192,9 +193,6 @@ def register():
             data['profileImage'] = request.files['profileImage'].filename
         if 'idImage' in request.files:
             data['idImage'] = request.files['idImage'].filename
-        
-        print("Received data:", data)  # Debugging log
-        print("Received files:", request.files)  # Debugging log
         
         with handler.session_scope() as session:
             try:
@@ -222,7 +220,8 @@ def register():
                     email=data['email'],
                     uni=data['uni'],
                     profile_image_url=profile_image_url,
-                    id_card_image_url=id_card_image_url
+                    id_card_image_url=id_card_image_url,
+                    password=data['password']
                 )
                 session.add(new_user)
                 session.commit()
@@ -245,11 +244,33 @@ def register():
             'message': str(e)
         }), 400
 
+@app.route("/items/<item_id>/sold", methods=["PUT"])
+def mark_item_as_sold(item_id):
+    try:
+        with handler.session_scope() as session:
+            item = handler.get_item_by_id(session, item_id)
+            item.sold = 1
+            session.commit()
+            # Delete the item images
+            for img_path in item.image_url.split(','):
+                img_path = img_path.strip()
+                os.remove(img_path)
+            return jsonify({
+                'status': 'success',
+                'message': 'Item marked as sold'
+            }), 200
+    except Exception as e:
+        print("Error fetching sold items:", str(e))
+        return jsonify({
+            'status': 'error',
+            'message': 'Failed to fetch sold items'
+        }), 500
+
 @app.route("/items", methods=["GET"])
 def get_items():
     try:
         with handler.session_scope() as session:
-            items = session.query(Item).all()
+            items = handler.get_unsold_items(session)
             items_list = []
             for item in items:
                 # Convert images to base64
@@ -316,7 +337,7 @@ def get_user(user_id):
 @app.route("/user/<user_id>/items", methods=["GET"])
 def get_user_items(user_id):
     with handler.session_scope() as session:
-        items = session.query(Item).filter(Item.user_id == user_id).all()
+        items = session.query(Item).filter(Item.user_id == user_id, Item.sold == 0).all()
         items_list = []
         for item in items:
             # Convert images to base64

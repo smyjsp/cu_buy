@@ -11,7 +11,7 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(false);
-  const [loginAs, setLoginAs] = useState('');
+  const [loginAs, setLoginAs] = useState(null);
 
   return (
     <Stack.Navigator
@@ -25,7 +25,11 @@ const App = () => {
           <Stack.Screen 
             name="Home" 
             component={HomePage}
-            initialParams={{ loginAs: loginAs, setLoginAs: setLoginAs, isLoggedin: isLoggedin }}
+            initialParams={{ 
+              loginAs: loginAs, 
+              setLoginAs: setLoginAs, 
+              setIsLoggedin: setIsLoggedin 
+            }}
           />
           <Stack.Screen 
             name="Sell" 
@@ -39,11 +43,16 @@ const App = () => {
           <Stack.Screen 
             name="ItemDetail" 
             component={ItemDetail}
+            initialParams={{ loginAs: loginAs }}
           />
           <Stack.Screen 
             name="Personal" 
             component={Personal}
-            initialParams={{ loginAs: loginAs, setIsLoggedin: setIsLoggedin, isLoggedin: isLoggedin }}
+            initialParams={{ 
+              loginAs: loginAs, 
+              setIsLoggedin: setIsLoggedin, 
+              setLoginAs: setLoginAs 
+            }}
           />
         </>
       ) : (
@@ -51,12 +60,19 @@ const App = () => {
           <Stack.Screen 
             name="Login" 
             component={LoginScreen}
-            initialParams={{ setIsLoggedin: setIsLoggedin, setLoginAs: setLoginAs }}
+            initialParams={{ 
+              setIsLoggedin: setIsLoggedin, 
+              setLoginAs: setLoginAs 
+            }}
           />
           <Stack.Screen 
             name="Register" 
             component={RegistrationScreen}
-            initialParams={{ loginAs: loginAs, setLoginAs: setLoginAs, setIsLoggedin: setIsLoggedin }}
+            initialParams={{ 
+              loginAs: loginAs, 
+              setLoginAs: setLoginAs, 
+              setIsLoggedin: setIsLoggedin 
+            }}
           />
         </>
       )}

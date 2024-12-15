@@ -4,11 +4,13 @@ const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#f5f5f5',
+      backgroundColor: '#fff',
     },
     header: {
       padding: 15,
       backgroundColor: '#fff',
+      borderBottomWidth: 1,
+      borderBottomColor: '#eee',
     },
     logo: {
       width: 100,
@@ -34,22 +36,30 @@ const styles = StyleSheet.create({
       width: 20,
       height: 20,
     },
-    categoriesContainer: {
-      backgroundColor: '#fff',
-      paddingVertical: 10,
+    categoriesRow: {
+      flexDirection: 'row',
+      height: 35,
+      borderBottomWidth: 1,
+      borderBottomColor: '#eee',
+      justifyContent: 'space-around',
+      alignItems: 'center',
     },
     categoryButton: {
-      paddingHorizontal: 15,
+      height: 35,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     categoryText: {
-      fontSize: 16,
+      fontSize: 14,
       color: '#4285F4',
+      fontWeight: '400',
     },
     itemsContainer: {
-      padding: 10,
       flexDirection: 'row',
       flexWrap: 'wrap',
       justifyContent: 'space-between',
+      padding: 10,
+      backgroundColor: '#fff',
     },
     itemCard: {
       width: (width - 30) / 2,
@@ -57,24 +67,39 @@ const styles = StyleSheet.create({
       borderRadius: 8,
       marginBottom: 10,
       overflow: 'hidden',
+      height: ((width - 30) / 2) + 70,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 5,
+      elevation: 6,
+      borderWidth: 1.5,
+      borderColor: '#e0e0e0',
     },
     itemImage: {
       width: '100%',
-      height: 150,
-      borderRadius: 8,
+      height: (width - 30) / 2,
     },
     itemInfo: {
-      padding: 8,
+      padding: 10,
+      flex: 1,
+      position: 'relative',
+      backgroundColor: '#fff',
     },
     itemTitle: {
       fontSize: 14,
-      fontWeight: '500',
+      marginBottom: 5,
     },
     itemPrice: {
-      fontSize: 14,
-      fontWeight: '600',
-      color: '#2E8B57',
-      marginTop: 4,
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: '#4285F4',
+      position: 'absolute',
+      bottom: 10,
+      right: 10,
     },
     bottomNav: {
       flexDirection: 'row',
@@ -90,12 +115,7 @@ const styles = StyleSheet.create({
     navIcon: {
       width: 24,
       height: 24,
-    },
-    noImage: {
-      backgroundColor: '#f0f0f0',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-  });
+    }
+});
   
-  export default styles;
+export default styles;

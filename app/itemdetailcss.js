@@ -1,29 +1,44 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform, StatusBar } from 'react-native';
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    paddingTop: Platform.OS === 'ios' ? 50 : StatusBar.currentHeight,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    justifyContent: 'center',
+    position: 'relative',
+  },
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  header: {
-    padding: 15,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    marginBottom: 10,
-  },
   backButton: {
-    padding: 10,
+    padding: 8,
+    position: 'absolute',
+    left: 16,
+    zIndex: 1,
   },
   backButtonText: {
-    fontSize: 24,
-    color: '#333',
+    fontSize: 16,
+    color: '#007AFF',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   imageContainer: {
     position: 'relative',
     backgroundColor: '#fff',
-    marginBottom: 15,
-    borderRadius: 8,
+    marginBottom: 12,
     overflow: 'hidden',
   },
   image: {
@@ -49,9 +64,15 @@ const styles = StyleSheet.create({
   detailsContainer: {
     backgroundColor: '#fff',
     padding: 20,
-    marginBottom: 15,
-    borderRadius: 8,
-    marginHorizontal: 10,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   title: {
     fontSize: 24,
@@ -61,7 +82,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 22,
-    color: '#2e7d32',
+    color: '#4285F4',
     fontWeight: '600',
     marginBottom: 10,
   },
@@ -73,9 +94,15 @@ const styles = StyleSheet.create({
   descriptionSection: {
     backgroundColor: '#fff',
     padding: 20,
-    marginBottom: 15,
-    borderRadius: 8,
-    marginHorizontal: 10,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   sectionTitle: {
     fontSize: 18,
@@ -91,9 +118,15 @@ const styles = StyleSheet.create({
   pickupSection: {
     backgroundColor: '#fff',
     padding: 20,
-    marginBottom: 15,
-    borderRadius: 8,
-    marginHorizontal: 10,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   pickupTime: {
     fontSize: 16,
@@ -103,9 +136,15 @@ const styles = StyleSheet.create({
   locationSection: {
     backgroundColor: '#fff',
     padding: 20,
-    marginBottom: 15,
-    borderRadius: 8,
-    marginHorizontal: 10,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   address: {
     fontSize: 16,
@@ -129,7 +168,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    elevation: 2,
+    elevation: 3,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

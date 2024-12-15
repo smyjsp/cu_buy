@@ -8,7 +8,9 @@ import {
   StyleSheet,
   Dimensions,
   Alert,
-  Linking
+  Linking,
+  Platform,
+  StatusBar
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import styles from './itemdetailcss';
@@ -79,7 +81,7 @@ const ItemDetail = ({ route, navigation }) => {
         });
         if (response.ok) {
             Alert.alert('Success', 'Item marked as sold');
-            navigation.goBack();
+            navigation.navigate('Personal', { loginAs: loginAs, refresh: true });
         } else {
             Alert.alert('Error', 'Failed to mark item as sold');
         }
@@ -104,107 +106,114 @@ const ItemDetail = ({ route, navigation }) => {
   console.log('Item seller (user_id):', item.user_id);
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        {/* Header content */}
-      </View>
-
-      <View style={styles.imageContainer}>
-        <ScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={(event) => {
-            const newIndex = Math.round(
-              event.nativeEvent.contentOffset.x / Dimensions.get('window').width
-            );
-            setCurrentImageIndex(newIndex);
-          }}
+    <View style={styles.safeArea}>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => navigation.goBack()}
         >
-          {item.images.map((image, index) => (
-            <Image
-              key={index}
-              source={{ 
-                uri: image.startsWith('data:') 
-                  ? image 
-                  : `data:image/jpeg;base64,${image}`
-              }}
-              style={styles.image}
-              resizeMode="cover"
-            />
-          ))}
-        </ScrollView>
-        <View style={styles.indicatorContainer}>
-          {item.images.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.indicator,
-                index === currentImageIndex && styles.activeIndicator,
-              ]}
-            />
-          ))}
-        </View>
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Item Details</Text>
       </View>
-
-      <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.price}>${item.price}</Text>
-        <Text style={styles.condition}>Condition: {item.condition}</Text>
-      </View>
-
-      <View style={styles.descriptionSection}>
-        <Text style={styles.sectionTitle}>Description</Text>
-        <Text style={styles.description}>{item.description}</Text>
-      </View>
-
-      <View style={styles.pickupSection}>
-        <Text style={styles.sectionTitle}>Pickup Time</Text>
-        <Text style={styles.pickupTime}>From: {formatDateTime(item.pickup_start_datetime)}</Text>
-        <Text style={styles.pickupTime}>To: {formatDateTime(item.pickup_end_datetime)}</Text>
-      </View>
-
-      <View style={styles.locationSection}>
-        <Text style={styles.sectionTitle}>Pickup Location</Text>
-        <Text style={styles.address}>{location?.place_address}</Text>
-        <View style={styles.mapContainer}>
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: location?.latitude,
-              longitude: location?.longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
+      <ScrollView style={styles.container}>
+        <View style={styles.imageContainer}>
+          <ScrollView
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onMomentumScrollEnd={(event) => {
+              const newIndex = Math.round(
+                event.nativeEvent.contentOffset.x / Dimensions.get('window').width
+              );
+              setCurrentImageIndex(newIndex);
             }}
           >
-            <Marker
-              coordinate={{
+            {item.images.map((image, index) => (
+              <Image
+                key={index}
+                source={{ 
+                  uri: image.startsWith('data:') 
+                    ? image 
+                    : `data:image/jpeg;base64,${image}`
+                }}
+                style={styles.image}
+                resizeMode="cover"
+              />
+            ))}
+          </ScrollView>
+          <View style={styles.indicatorContainer}>
+            {item.images.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.indicator,
+                  index === currentImageIndex && styles.activeIndicator,
+                ]}
+              />
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.detailsContainer}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.price}>${item.price}</Text>
+          <Text style={styles.condition}>Condition: {item.condition}</Text>
+        </View>
+
+        <View style={styles.descriptionSection}>
+          <Text style={styles.sectionTitle}>Description</Text>
+          <Text style={styles.description}>{item.description}</Text>
+        </View>
+
+        <View style={styles.pickupSection}>
+          <Text style={styles.sectionTitle}>Pickup Time</Text>
+          <Text style={styles.pickupTime}>From: {formatDateTime(item.pickup_start_datetime)}</Text>
+          <Text style={styles.pickupTime}>To: {formatDateTime(item.pickup_end_datetime)}</Text>
+        </View>
+
+        <View style={styles.locationSection}>
+          <Text style={styles.sectionTitle}>Pickup Location</Text>
+          <Text style={styles.address}>{location?.place_address}</Text>
+          <View style={styles.mapContainer}>
+            <MapView
+              style={styles.map}
+              initialRegion={{
                 latitude: location?.latitude,
                 longitude: location?.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
               }}
-            />
-          </MapView>
+            >
+              <Marker
+                coordinate={{
+                  latitude: location?.latitude,
+                  longitude: location?.longitude,
+                }}
+              />
+            </MapView>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.buttonSection}>
-        {loginAs === item.user_id ? (
-          <TouchableOpacity 
-            style={[styles.contactButton, { backgroundColor: '#4CAF50' }]}
-            onPress={handleMarkAsSold}
-          >
-            <Text style={styles.contactButtonText}>Mark as Sold</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity 
-            style={styles.contactButton}
-            onPress={handleContactSeller}
-          >
-            <Text style={styles.contactButtonText}>Contact Seller</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </ScrollView>
+        <View style={styles.buttonSection}>
+          {loginAs === item.user_id ? (
+            <TouchableOpacity 
+              style={[styles.contactButton, { backgroundColor: '#4CAF50' }]}
+              onPress={handleMarkAsSold}
+            >
+              <Text style={styles.contactButtonText}>Mark as Sold</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity 
+              style={styles.contactButton}
+              onPress={handleContactSeller}
+            >
+              <Text style={styles.contactButtonText}>Contact Seller</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 

@@ -2,19 +2,23 @@ import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
-    StyleSheet,
     FlatList,
     TouchableOpacity,
     Image,
     Alert,
-    RefreshControl
+    RefreshControl,
 } from 'react-native';
+import styles from './personalcss';
 
 const Personal = ({ navigation, route }) => {
-    const loginAs = route.params.loginAs;
+    const loginAs = route.params?.loginAs;
+    const setIsLoggedin = route.params?.setIsLoggedin || (() => {});
+    const setLoginAs = route.params?.setLoginAs || (() => {});
     const [userListings, setUserListings] = useState([]);
     const [userInfo, setUserInfo] = useState(null);
     const [refreshing, setRefreshing] = useState(false);
+
+    
 
     const fetchUserInfo = async () => {
         try {
@@ -84,8 +88,24 @@ const Personal = ({ navigation, route }) => {
         fetchUserListings();
     }, []);
 
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            if (route.params?.refresh) {
+                fetchUserListings();
+                navigation.setParams({ refresh: undefined });
+            }
+        });
+
+        return unsubscribe;
+    }, [navigation, route.params?.refresh]);
+
     const handleLogout = () => {
-        route.params.setIsLoggedin(false);
+        if (typeof setIsLoggedin === 'function' && typeof setLoginAs === 'function') {
+            setIsLoggedin(false);
+            setLoginAs(null);
+        } else {
+            console.error('Logout functions not available');
+        }
     };
 
     const renderItem = ({ item }) => {
@@ -125,187 +145,76 @@ const Personal = ({ navigation, route }) => {
                 <View style={styles.listingInfo}>
                     <Text style={styles.listingTitle}>{item.title}</Text>
                     <Text style={styles.listingPrice}>${item.price}</Text>
-                    <Text style={styles.listingStatus}>Status: {item.status}</Text>
+                    <Text style={styles.listingStatus}>Status: {item.sold ? 'Sold' : 'Available'}</Text>
                 </View>
             </TouchableOpacity>
         );
     };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
+        <View style={styles.safeArea}>
+            <View style={styles.headerContainer}>
+                <TouchableOpacity 
+                    style={styles.backButton} 
+                    onPress={() => navigation.goBack()}
+                >
+                    <Text style={styles.backButtonText}>← Back</Text>
+                </TouchableOpacity>
                 <Text style={styles.headerTitle}>Profile</Text>
             </View>
 
-            {userInfo && (
-                <View style={styles.profileSection}>
-                    <Image
-                        source={{ 
-                            uri: userInfo.profile_image.startsWith('data:') 
-                                ? userInfo.profile_image 
-                                : `data:image/jpeg;base64,${userInfo.profile_image}`
-                        }}
-                        style={styles.profileImage}
+            <View style={styles.mainContainer}>
+                <View style={styles.contentContainer}>
+                    <FlatList
+                        ListHeaderComponent={() => (
+                            <>
+                                {userInfo && (
+                                    <View style={styles.profileSection}>
+                                        <Image
+                                            source={{ 
+                                                uri: userInfo.profile_image.startsWith('data:') 
+                                                    ? userInfo.profile_image 
+                                                    : `data:image/jpeg;base64,${userInfo.profile_image}`
+                                            }}
+                                            style={styles.profileImage}
+                                        />
+                                        <View style={styles.profileInfo}>
+                                            <Text style={styles.userName}>{userInfo.username}</Text>
+                                            <Text style={styles.userEmail}>{userInfo.email}</Text>
+                                            <Text style={styles.universityName}>Columbia University</Text>
+                                        </View>
+                                    </View>
+                                )}
+                                <Text style={styles.sectionTitle}>My Listings</Text>
+                            </>
+                        )}
+                        data={userListings}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id.toString()}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                        }
+                        ListEmptyComponent={
+                            <Text style={styles.emptyText}>No listings found</Text>
+                        }
+                        style={styles.listingsContainer}
                     />
-                    <View style={styles.profileInfo}>
-                        <Text style={styles.userName}>{userInfo.username}</Text>
-                        <Text style={styles.userEmail}>{userInfo.email}</Text>
-                        <Text style={styles.universityName}>Columbia University</Text>
-                    </View>
                 </View>
-            )}
 
-            <Text style={styles.sectionTitle}>My Listings</Text>
-            
-            <FlatList
-                data={userListings}
-                renderItem={renderItem}
-                keyExtractor={item => item.id.toString()}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-                ListEmptyComponent={
-                    <Text style={styles.emptyText}>No listings found</Text>
-                }
-                style={styles.listingsContainer}
-            />
-
-            <View style={styles.logoutSection}>
-                <TouchableOpacity 
-                    style={styles.logoutButton}
-                    onPress={handleLogout}
-                >
-                    <Text style={styles.logoutButtonText}>Logout</Text>
-                </TouchableOpacity>
+                <View style={styles.logoutSection}>
+                    <TouchableOpacity 
+                        style={styles.logoutButton}
+                        onPress={handleLogout}
+                    >
+                        <Text style={styles.logoutButtonText}>Logout</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f5f5f5',
-    },
-    header: {
-        backgroundColor: '#fff',
-        paddingTop: 50, // Adjust for status bar
-        paddingBottom: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    headerTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#333',
-    },
-    profileSection: {
-        backgroundColor: '#fff',
-        padding: 20,
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-        marginBottom: 10,
-    },
-    profileImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        marginRight: 15,
-    },
-    profileInfo: {
-        flex: 1,
-    },
-    userName: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 4,
-    },
-    userEmail: {
-        fontSize: 14,
-        color: '#666',
-        marginBottom: 4,
-    },
-    universityName: {
-        fontSize: 16,
-        color: '#4a90e2',
-        fontWeight: '500',
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        padding: 15,
-        backgroundColor: '#fff',
-        color: '#333',
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-    listingsContainer: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    listingItem: {
-        flexDirection: 'row',
-        padding: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-        backgroundColor: '#fff',
-    },
-    listingImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 8,
-    },
-    listingInfo: {
-        marginLeft: 15,
-        flex: 1,
-    },
-    listingTitle: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#333',
-        marginBottom: 4,
-    },
-    listingPrice: {
-        fontSize: 15,
-        color: '#2e7d32',
-        fontWeight: '600',
-        marginBottom: 4,
-    },
-    listingStatus: {
-        fontSize: 14,
-        color: '#666',
-    },
-    logoutSection: {
-        padding: 15,
-        backgroundColor: '#fff',
-        borderTopWidth: 1,
-        borderTopColor: '#eee',
-    },
-    logoutButton: {
-        backgroundColor: '#ff4444',
-        padding: 15,
-        borderRadius: 8,
-        alignItems: 'center',
-    },
-    logoutButtonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    emptyText: {
-        textAlign: 'center',
-        marginTop: 32,
-        color: '#666',
-        fontSize: 16,
-    },
-});
 
 export default Personal;

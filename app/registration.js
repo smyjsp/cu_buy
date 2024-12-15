@@ -14,6 +14,7 @@ const RegistrationScreen = ({navigation, route}) => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [uni, setUni] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const openImagePicker = async () => {
@@ -183,6 +184,14 @@ const RegistrationScreen = ({navigation, route}) => {
       Alert.alert('Error', 'Please enter your UNI');
       return;
     }
+    if (!password.trim()) {
+      Alert.alert('Error', 'Please enter a password');
+      return;
+    }
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters long');
+      return;
+    }
     if (!profileImage) {
       Alert.alert('Error', 'Please upload a profile photo');
       return;
@@ -193,30 +202,27 @@ const RegistrationScreen = ({navigation, route}) => {
     }
 
     try {
-      // Show loading indicator
       setIsLoading(true);
-
       const formData = new FormData();
       
-      // Add text fields
       formData.append('firstName', firstName);
       formData.append('lastName', lastName);
       formData.append('email', email);
       formData.append('uni', uni);
+      formData.append('password', password);
       
-      // Add images if they exist
       if (profileImage) {
         formData.append('profileImage', {
-          uri: profileImage.uri,
-          type: 'image/jpeg',  // or appropriate mime type
+          uri: profileImage,
+          type: 'image/jpeg',
           name: 'profile.jpg'
         });
       }
       
       if (idImage) {
         formData.append('idImage', {
-          uri: idImage.uri,
-          type: 'image/jpeg',  // or appropriate mime type
+          uri: idImage,
+          type: 'image/jpeg',
           name: 'id.jpg'
         });
       }
@@ -229,17 +235,12 @@ const RegistrationScreen = ({navigation, route}) => {
         },
       });
 
-      console.log('Response status:', response.status);  // Debug log
-      const responseText = await response.text();  // First get text
-      console.log('Response text:', responseText);  // Debug log
-      
-      const data = JSON.parse(responseText);  // Then parse it
+      const data = await response.json();
       
       if (response.ok) {
         Alert.alert('Success', data.message);
+        setLoginAs(data.user_id);
         setIsLoggedin(true);
-        setLoginAs(response.get('loginAs'));
-        navigation.navigate('Home');
       } else {
         throw new Error(data.message || 'Registration failed');
       }
@@ -309,6 +310,14 @@ const RegistrationScreen = ({navigation, route}) => {
 
             <Text style={styles.label}>UNI</Text>
             <TextInput style={styles.input} placeholder="Enter your UNI" onChangeText={setUni} />
+
+            <Text style={styles.label}>Password</Text>
+            <TextInput 
+              style={styles.input} 
+              placeholder="Enter your password" 
+              onChangeText={setPassword}
+              secureTextEntry={true}
+            />
           </View>
 
           {/* Upload CU ID */}

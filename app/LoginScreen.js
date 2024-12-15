@@ -33,11 +33,12 @@ const LoginScreen = ({ navigation, route }) => {
       const data = await response.json();
   
       if (response.ok) {
-        Alert.alert('Success', 'Login successful');
-        user = data.data;
-        console.log(user);
+        const user = data.data;
+        console.log('Setting loginAs to:', user);
         setLoginAs(user);
-        setIsLoggedin(true);
+        setTimeout(() => {
+          setIsLoggedin(true);
+        }, 100);
       } else {
         throw new Error(data.message || 'Login failed');
       }

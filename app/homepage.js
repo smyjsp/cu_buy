@@ -12,6 +12,14 @@ const HomePage = ({ navigation, route }) => {
     fetchItems();
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('Home screen focused - refreshing data');
+      fetchItems();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const fetchItems = async () => {
     try {
@@ -21,11 +29,11 @@ const HomePage = ({ navigation, route }) => {
           'Content-Type': 'application/json',
         },
       });
-      
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      
+
       const data = await response.json();
       setItems(data);
     } catch (error) {
@@ -36,8 +44,8 @@ const HomePage = ({ navigation, route }) => {
   const categories = ['For you', 'Categories', 'Nearby', 'Recently viewed'];
 
   return (
-    <View style={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <View style={{ flex: 1 }}>
         {/* Header */}
         <View style={styles.header}>
           <Image
@@ -60,54 +68,53 @@ const HomePage = ({ navigation, route }) => {
           </View>
         </View>
 
-        {/* Categories */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.categoriesContainer}
-        >
-          {categories.map((category, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.categoryButton}
-            >
-              <Text style={styles.categoryText}>{category}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+        {/* Main Content */}
+        <View style={{ flex: 1 }}>
+          {/* Categories */}
+          <View style={styles.categoriesRow}>
+            {categories.map((category, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.categoryButton}
+              >
+                <Text style={styles.categoryText}>{category}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
 
-        {/* Items Grid */}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.itemsContainer}
-        >
-          {items.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              style={styles.itemCard}
-              onPress={() => navigation.navigate('ItemDetail', { 
-                item: item,
-                loginAs: loginAs
-              })}
-            >
-              {item.images && item.images.length > 0 ? (
-                <Image
-                  source={{ uri: `data:image/jpeg;base64,${item.images[0]}` }}
-                  style={styles.itemImage}
-                  resizeMode="cover"
-                />
-              ) : (
-                <View style={[styles.itemImage, styles.noImage]}>
-                  <Text>No Image</Text>
+          {/* Items Grid */}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.itemsContainer}
+          >
+            {items.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                style={styles.itemCard}
+                onPress={() => navigation.navigate('ItemDetail', {
+                  item: item,
+                  loginAs: loginAs
+                })}
+              >
+                {item.images && item.images.length > 0 ? (
+                  <Image
+                    source={{ uri: `data:image/jpeg;base64,${item.images[0]}` }}
+                    style={styles.itemImage}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <View style={[styles.itemImage, styles.noImage]}>
+                    <Text>No Image</Text>
+                  </View>
+                )}
+                <View style={styles.itemInfo}>
+                  <Text style={styles.itemTitle} numberOfLines={1}>{item.title}</Text>
+                  <Text style={styles.itemPrice}>${item.price}</Text>
                 </View>
-              )}
-              <View style={styles.itemInfo}>
-                <Text style={styles.itemTitle} numberOfLines={1}>{item.title}</Text>
-                <Text style={styles.itemPrice}>${item.price}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
 
         {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
@@ -117,9 +124,9 @@ const HomePage = ({ navigation, route }) => {
           <TouchableOpacity style={styles.navItem}>
             <Image source={require('./static/images/heart 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Sell',{
+          <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Sell', {
             loginAs: loginAs,
-            onListingSuccess: () =>{
+            onListingSuccess: () => {
               fetchItems();
             }
           })}>
@@ -134,8 +141,8 @@ const HomePage = ({ navigation, route }) => {
             <Image source={require('./static/images/profile 2.png')} style={styles.navIcon} />
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
