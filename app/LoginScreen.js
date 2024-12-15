@@ -50,7 +50,7 @@ const LoginScreen = ({ navigation, route }) => {
   
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} options={{headerShown:false}}>
       <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}

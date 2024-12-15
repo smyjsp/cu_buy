@@ -27,6 +27,7 @@ const HomePage = ({ navigation, route }) => {
       }
       
       const data = await response.json();
+      console.log('homepage.js',data[0].location);
       setItems(data);
     } catch (error) {
       console.error('Error fetching items:', error);
@@ -85,7 +86,12 @@ const HomePage = ({ navigation, route }) => {
             <TouchableOpacity
               key={item.id}
               style={styles.itemCard}
-              onPress={() => console.log(`Clicked ${item.title}`)}
+              onPress={() => navigation.navigate('ItemDetail', { 
+                item: {
+                  ...item,
+                  images: item.images.map(img => `data:image/jpeg;base64,${img}`),
+                }
+              })}
             >
               {item.images && item.images.length > 0 ? (
                 <Image

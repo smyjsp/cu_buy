@@ -175,7 +175,7 @@ const RegistrationScreen = ({navigation, route}) => {
       Alert.alert('Error', 'Please enter your Columbia/Barnard email');
       return;
     }
-    if (!email.trim().endsWith('@columbia.edu')) {
+    if (!email.trim().endsWith('@columbia.edu') && !email.trim().endsWith('@barnard.edu')) {
       Alert.alert('Error', 'Please use a valid Columbia/Barnard email address');
       return;
     }

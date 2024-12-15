@@ -12,6 +12,12 @@ from models.Item import Item
 
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
+def allowed_file(filename):
+    # Define allowed extensions
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'heic'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # Add endpoint to post a new item
 @app.route("/items", methods=["POST"])
@@ -63,7 +69,17 @@ def add_item():
             image_key = f'image{i}'
             if image_key in request.files and request.files[image_key]:
                 image = request.files[image_key]
-                filename = f"item_{timestamp}_{i}.jpg"
+        
+                # Check if the file has an allowed extension
+                if not allowed_file(image.filename):
+                    return jsonify({
+                        'status': 'error',
+                        'message': f'Invalid file type for {image_key}. Allowed types are: png, jpg, jpeg, gif'
+                    }), 400
+
+                # Get original file extension
+                original_extension = image.filename.rsplit('.', 1)[1].lower()
+                filename = f"item_{timestamp}_{i}.{original_extension}"
                 image_path = os.path.join(image_dir, filename)
                 image.save(image_path)
                 image_filenames.append(image_path)
@@ -253,6 +269,7 @@ def get_items():
                     'title': item.title,
                     'price': item.price,
                     'images': images,
+                    'condition': item.condition,
                     'description': item.description,
                     'seller': item.user.uni,
                     'seller_id': item.user.id,
@@ -268,16 +285,18 @@ def get_items():
             'status': 'error',
             'message': 'Failed to fetch items'
         }), 500
-
-@app.route("/clear_items", methods=["POST"])
-def clear_items():
-    try:
-        with handler.session_scope() as session:
-            session.query(Item).delete()
-            session.commit()
-            return jsonify({'status': 'success', 'message': 'All items cleared'}), 200
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+        
+@app.route("/user/<user_id>", methods=["GET"])
+def get_user(user_id):
+    with handler.session_scope() as session:
+        user = handler.get_user_by_id(session, user_id)
+        return jsonify({
+            'name': user.name,
+            'email': user.email,
+            'uni': user.uni,
+            'profile_image_url': user.profile_image_url,
+            'id_card_image_url': user.id_card_image_url
+        }), 200
 
 # Run the Flask app
 if __name__ == "__main__":

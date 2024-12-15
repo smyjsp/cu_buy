@@ -116,9 +116,32 @@ const SellScreen = ({ navigation, route }) => {
       images.forEach((imageUri, index) => {
         if (imageUri) {
           const imageName = imageUri.split('/').pop();
+          // Get file extension from the image URI
+          const fileExtension = imageName.split('.').pop().toLowerCase();
+          console.log('fileExtension', fileExtension);
+          // Determine MIME type based on file extension
+          let mimeType;
+          switch (fileExtension) {
+            case 'jpg':
+            case 'jpeg':
+              mimeType = 'image/jpeg';
+              break;
+            case 'png':
+              mimeType = 'image/png';
+              break;
+            case 'gif':
+              mimeType = 'image/gif';
+              break;
+            case 'heic':
+              mimeType = 'image/heic';
+              break;
+            default:
+              mimeType = 'image/jpeg';
+          }
+      
           formData.append(`image${index + 1}`, {
             uri: imageUri,
-            type: 'image/jpeg',
+            type: mimeType,
             name: imageName,
           });
         }
@@ -145,6 +168,7 @@ const SellScreen = ({ navigation, route }) => {
         setCondition('');
         setLocation('');
         setCategory('');
+        route.params.onListingSuccess();
         navigation.goBack();
       } else {
         throw new Error(data.message || 'Failed to list item');
