@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, SafeAreaView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import styles from './registration_style'; // Import styles from the external styles file
+import styles from './registration_style';
 
 const LoginScreen = ({ navigation, route }) => {
   const { setIsLoggedin, setLoginAs } = route.params;
@@ -60,16 +60,14 @@ const LoginScreen = ({ navigation, route }) => {
           contentContainerStyle={styles.scrollContainer}
           showsVerticalScrollIndicator={false}
         >
-          {/* Header */}
           <View style={styles.header}>
             <Image
-              source={require('./static/images/logo.png')} // Replace with your logo URL
+              source={require('./static/images/logo.png')}
               style={styles.logo}
             />
             <Text style={styles.titleText}>Login</Text>
           </View>
 
-          {/* Input Fields */}
           <Animatable.View
             animation="fadeInUp"
             duration={800}
@@ -78,7 +76,7 @@ const LoginScreen = ({ navigation, route }) => {
             <Text style={styles.label}>Email</Text>
             <TextInput 
               style={styles.input} 
-              placeholder="e.g. xx1234@columbia.edu" 
+              placeholder="e.g. xx1234@columbia.edu/barnard.edu" 
               onChangeText={setEmail} 
               keyboardType="email-address" 
               autoCapitalize="none" 
@@ -93,7 +91,6 @@ const LoginScreen = ({ navigation, route }) => {
             />
           </Animatable.View>
 
-          {/* Login Button */}
           <TouchableOpacity 
             style={styles.registerButton} 
             onPress={onLogin}
@@ -102,7 +99,6 @@ const LoginScreen = ({ navigation, route }) => {
             <Text style={styles.registerButtonText}>Login</Text>
           </TouchableOpacity>
 
-          {/* Sign Up Link */}
           <View style={styles.signupContainer}>
             <Text style={styles.signupText}>Don't have an account? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
@@ -110,7 +106,6 @@ const LoginScreen = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
 
-          {/* Add bottom padding for scrolling */}
           <View style={styles.bottomPadding} />
         </ScrollView>
       </KeyboardAvoidingView>

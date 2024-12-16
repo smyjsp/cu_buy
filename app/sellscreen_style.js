@@ -244,20 +244,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   searchContainer: {
-    position: 'absolute', // Position the search bar absolutely
-    top: 0, // Adjust based on your header height
+    position: 'absolute',
+    top: 0,
     left: 10,
     right: 10,
-    backgroundColor: 'white', // Prevent transparency issues
+    backgroundColor: 'white',
     borderRadius: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5, // For Android shadow
+    elevation: 5,
     padding: 5,
     marginBottom: 0,
-    zIndex: 999, // Ensure suggestions appear above map
+    zIndex: 999,
   },
   autocompleteContainer: {
     flex: 0,
@@ -272,7 +272,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: '#fff',
     fontSize: 16,
-    // iOS shadow
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -280,14 +279,12 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    // Android shadow
     elevation: 3,
   },
   searchResultsList: {
     backgroundColor: '#fff',
     borderRadius: 8,
     marginTop: 8,
-    // iOS shadow
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -295,7 +292,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    // Android shadow
     elevation: 3,
   },
   searchRow: {
@@ -328,7 +324,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 2, // For Android shadow
+    elevation: 2,
   },
   locationContainer: {
     marginHorizontal: 20,
@@ -542,11 +538,11 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginHorizontal: 16,
-    marginTop: 16,  // Added margin top
-    marginBottom: 16, // Added margin bottom
+    marginTop: 16,
+    marginBottom: 16, 
     alignItems: 'center',
-    width: '90%',  // Make it wider
-    alignSelf: 'center', // Center the button
+    width: '90%', 
+    alignSelf: 'center', 
   },
   aiButtonText: {
     color: 'white',

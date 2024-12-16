@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
-const { width, height } = Dimensions.get('window'); // Get screen dimensions
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -13,20 +13,20 @@ const styles = StyleSheet.create({
     height: width * 0.25,
     resizeMode: 'contain',
     alignSelf: 'flex-start',
-    marginTop: 0, // Reduced from 40 to 20
+    marginTop: 0,
   },
   titleText: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#333',
     textAlign: 'center',
-    marginTop: 0, // Reduced spacing after logo
+    marginTop: 0,
   },
   registrationText: {
     fontSize: 20,
     color: '#666',
     textAlign: 'center',
-    marginBottom: 10, // Reduced bottom margin
+    marginBottom: 10,
   },
   imageUploadContainer: {
     alignItems: 'center',
@@ -137,7 +137,33 @@ const styles = StyleSheet.create({
   signupLink: {
     color: '#007AFF',
     fontWeight: 'bold',
-  }
+  },
+
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    height: 56,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  backButton: {
+    padding: 8,
+  },
+  backText: {
+    color: '#4285F4',
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#000',
+  },
+  headerRight: {
+    width: 40,
+  },
 });
 
 export default styles;

@@ -35,7 +35,6 @@ const ItemDetail = ({ route, navigation }) => {
 
   const handleContactSeller = async () => {
     try {
-        // Get user info from server
         const response = await fetch(`http://3.149.231.33/user/${item.seller_id}`, {
             method: 'GET',
             headers: {

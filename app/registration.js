@@ -254,6 +254,17 @@ const RegistrationScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.backText}>← Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Registration</Text>
+        <View style={styles.headerRight} />
+      </View>
+
       <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
@@ -262,17 +273,15 @@ const RegistrationScreen = ({navigation, route}) => {
           contentContainerStyle={styles.scrollContainer}
           showsVerticalScrollIndicator={false}
         >
-          {/* Header */}
           <View style={styles.header}>
             <Image
-              source={require('./static/images/logo.png')} // Replace with your logo URL
+              source={require('./static/images/logo.png')}
               style={styles.logo}
             />
             <Text style={styles.titleText}>CU Buy</Text>
             <Text style={styles.registrationText}>Registration</Text>
           </View>
 
-          {/* Profile Picture Upload */}
           <Animatable.View
             animation="fadeInUp"
             duration={800}
@@ -297,7 +306,6 @@ const RegistrationScreen = ({navigation, route}) => {
             </TouchableOpacity>
           </Animatable.View>
 
-          {/* Input Fields */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>First Name (on your CU ID card)</Text>
             <TextInput style={styles.input} placeholder="Enter your first name" onChangeText={setFirstName} />
@@ -320,7 +328,6 @@ const RegistrationScreen = ({navigation, route}) => {
             />
           </View>
 
-          {/* Upload CU ID */}
           <TouchableOpacity 
             style={styles.uploadContainer}
             onPress={openIDPicker}
@@ -344,12 +351,10 @@ const RegistrationScreen = ({navigation, route}) => {
             )}
           </TouchableOpacity>
 
-          {/* Register Button */}
           <TouchableOpacity style={styles.registerButton} onPress={onRegister}>
             <Text style={styles.registerButtonText}>Register</Text>
           </TouchableOpacity>
           
-          {/* Add bottom padding for scrolling */}
           <View style={styles.bottomPadding} />
         </ScrollView>
       </KeyboardAvoidingView>

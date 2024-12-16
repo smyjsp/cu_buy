@@ -46,7 +46,6 @@ const HomePage = ({ navigation, route }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ flex: 1 }}>
-        {/* Header */}
         <View style={styles.header}>
           <Image
             source={require('./static/images/logo.png')}
@@ -68,9 +67,7 @@ const HomePage = ({ navigation, route }) => {
           </View>
         </View>
 
-        {/* Main Content */}
         <View style={{ flex: 1 }}>
-          {/* Categories */}
           <View style={styles.categoriesRow}>
             {categories.map((category, index) => (
               <TouchableOpacity
@@ -82,7 +79,6 @@ const HomePage = ({ navigation, route }) => {
             ))}
           </View>
 
-          {/* Items Grid */}
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.itemsContainer}
@@ -116,7 +112,6 @@ const HomePage = ({ navigation, route }) => {
           </ScrollView>
         </View>
 
-        {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
           <TouchableOpacity style={styles.navItem}>
             <Image source={require('./static/images/home(selected) 2.png')} style={styles.navIcon} />

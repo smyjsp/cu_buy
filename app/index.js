@@ -17,7 +17,7 @@ const App = () => {
     <Stack.Navigator
       initialRouteName="Login"
       screenOptions={{
-        headerShown: false, // Disable headers globally for all screens
+        headerShown: false,
       }}
     >
       {isLoggedin ? (

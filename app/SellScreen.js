@@ -12,7 +12,7 @@ import { KeyboardAvoidingView } from 'react-native';
 
 const SellScreen = ({ navigation, route }) => {
   const { loginAs } = route.params;
-  const [images, setImages] = useState([null, null, null]); // 3 image slots
+  const [images, setImages] = useState([null, null, null]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -34,7 +34,7 @@ const SellScreen = ({ navigation, route }) => {
   });
   const [showModal, setShowModal] = useState(false);
   const [tempDate, setTempDate] = useState(new Date());
-  const [currentPicking, setCurrentPicking] = useState(null); // 'start' or 'end'
+  const [currentPicking, setCurrentPicking] = useState(null);
 
   const conditions = ['Like new', 'Good', 'Fair', 'Poor'];
 
@@ -110,13 +110,10 @@ const SellScreen = ({ navigation, route }) => {
       formData.append('user_id', loginAs);
 
 
-      // Append all non-null images
       images.forEach((imageUri, index) => {
         if (imageUri) {
           const imageName = imageUri.split('/').pop();
-          // Get file extension from the image URI
           const fileExtension = imageName.split('.').pop().toLowerCase();
-          // Determine MIME type based on file extension
           let mimeType;
           switch (fileExtension) {
             case 'jpg':
@@ -156,7 +153,6 @@ const SellScreen = ({ navigation, route }) => {
 
       if (response.ok) {
         Alert.alert('Success', 'Item listed successfully!');
-        // Reset form
         setImages([null, null, null]);
         setTitle('');
         setDescription('');
@@ -189,7 +185,6 @@ const SellScreen = ({ navigation, route }) => {
         place_address: details.formatted_address
       };
 
-      // Update both selected location and location state
       setSelectedLocation(newLocation);
       setLocation(newLocation);
       
@@ -220,7 +215,6 @@ const SellScreen = ({ navigation, route }) => {
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }} pointerEvents="box-none">
         <View style={styles.container} pointerEvents='box-none'>
-          {/* Header Section */}
           <View style={styles.header}>
             <TouchableOpacity
               style={styles.closeButton}
@@ -234,14 +228,12 @@ const SellScreen = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
 
-          {/* Main Content as FlatList */}
           <FlatList
             data={[{ key: 'content' }]}
             keyExtractor={(item) => item.key}
             keyboardShouldPersistTaps='handled'
             renderItem={() => (
               <>
-                {/* Images Section */}
                 <View style={styles.imageSection}>
                   {images.map((image, index) => (
                     <TouchableOpacity
@@ -268,7 +260,6 @@ const SellScreen = ({ navigation, route }) => {
 
 
 
-                {/* Form Section */}
                 <View style={styles.formSection}>
                   <Text style={styles.sectionTitle}>Description</Text>
                   <TextInput
@@ -327,10 +318,8 @@ const SellScreen = ({ navigation, route }) => {
                     ))}
                   </View>
 
-                  {/* Time Picker Section */}
                   <Text style={styles.sectionTitle}>Pick up time availability</Text>
                   <View style={styles.timePickerContainer}>
-                    {/* From Time */}
                     <View style={styles.timePickerHalf}>
                       <Text style={styles.timeLabel}>From</Text>
                       <TouchableOpacity
@@ -347,7 +336,6 @@ const SellScreen = ({ navigation, route }) => {
                       </TouchableOpacity>
                     </View>
 
-                    {/* To Time */}
                     <View style={styles.timePickerHalf}>
                       <Text style={styles.timeLabel}>To</Text>
                       <TouchableOpacity
@@ -376,7 +364,6 @@ const SellScreen = ({ navigation, route }) => {
                       </TouchableOpacity>
                     </View>
 
-                    {/* DateTime Picker Modal */}
                     <Modal
                       visible={showModal}
                       transparent={true}
@@ -435,7 +422,6 @@ const SellScreen = ({ navigation, route }) => {
                     </Modal>
                   </View>
 
-                  {/* Map Section with Search Bar */}
                   <View style={styles.locationSection}>
                     <Text style={styles.sectionTitle}>Pick up location</Text>
 
@@ -481,7 +467,6 @@ const SellScreen = ({ navigation, route }) => {
                     </View>
                   </View>
 
-                  {/* Selected Location Info */}
                   {selectedLocation && (
                     <View style={styles.selectedLocationInfo}>
                       <Text>
@@ -496,7 +481,6 @@ const SellScreen = ({ navigation, route }) => {
             )}
           />
 
-          {/* Save Draft Button */}
           <TouchableOpacity style={styles.saveDraftButton}>
             <Text style={styles.saveDraftText}>Save Draft</Text>
           </TouchableOpacity>
