@@ -183,16 +183,14 @@ def register():
         data = {
             'firstName': request.form.get('firstName', ''),
             'lastName': request.form.get('lastName', ''),
-            'email': request.form.get('email', ''),
+            'email': request.form.get('email', '').lower(),
             'uni': request.form.get('uni', ''),
             'password': request.form.get('password', '')
         }
         
-        # File handling
-        if 'profileImage' in request.files:
-            data['profileImage'] = request.files['profileImage'].filename
-        if 'idImage' in request.files:
-            data['idImage'] = request.files['idImage'].filename
+        # Initialize image URLs
+        profile_image_url = None
+        id_card_image_url = None
         
         with handler.session_scope() as session:
             try:
@@ -201,20 +199,66 @@ def register():
                         'status': 'error',
                         'message': 'User already exists'
                     }), 400
+                    
                 if not os.path.exists(f"./data/{data['uni']}"):
-                    # save the image to the folder
                     os.makedirs(f"./data/{data['uni']}", exist_ok=True)
+                    
+                    # Handle profile image
                     if 'profileImage' in request.files:
-                        request.files['profileImage'].save(f"./data/{data['uni']}/profileImage.jpg")
-                        profile_image_url = f"./data/{data['uni']}/profileImage.jpg"
+                        profile_file = request.files['profileImage']
+                        if profile_file and profile_file.filename:
+                            if not allowed_file(profile_file.filename):
+                                return jsonify({
+                                    'status': 'error',
+                                    'message': 'Invalid file type for profile image. Allowed types are: png, jpg, jpeg, gif'
+                                }), 400
+                            
+                            try:
+                                # Get original file extension
+                                ext = profile_file.filename.rsplit('.', 1)[1].lower()
+                                profile_path = f"./data/{data['uni']}/profileImage.{ext}"
+                                profile_file.save(profile_path)
+                                profile_image_url = profile_path
+                            except Exception as e:
+                                print(f"Error saving profile image: {str(e)}")
+                                return jsonify({
+                                    'status': 'error',
+                                    'message': f'Error saving profile image: {str(e)}'
+                                }), 400
+                    
+                    # Handle ID image
                     if 'idImage' in request.files:
-                        request.files['idImage'].save(f"./data/{data['uni']}/idImage.jpg")
-                        id_card_image_url = f"./data/{data['uni']}/idImage.jpg"
+                        id_file = request.files['idImage']
+                        if id_file and id_file.filename:
+                            if not allowed_file(id_file.filename):
+                                return jsonify({
+                                    'status': 'error',
+                                    'message': 'Invalid file type for ID image. Allowed types are: png, jpg, jpeg, gif'
+                                }), 400
+                            
+                            try:
+                                # Get original file extension
+                                ext = id_file.filename.rsplit('.', 1)[1].lower()
+                                id_path = f"./data/{data['uni']}/idImage.{ext}"
+                                id_file.save(id_path)
+                                id_card_image_url = id_path
+                            except Exception as e:
+                                print(f"Error saving ID image: {str(e)}")
+                                return jsonify({
+                                    'status': 'error',
+                                    'message': f'Error saving ID image: {str(e)}'
+                                }), 400
                 else:
                     return jsonify({
                         'status': 'error',
                         'message': 'User already exists'
                     }), 400
+
+                # Print debug information
+                print("Files in request:", request.files)
+                print("Profile image URL:", profile_image_url)
+                print("ID card image URL:", id_card_image_url)
+
                 new_user = User(
                     name=data['firstName'] + " " + data['lastName'],
                     email=data['email'],
@@ -225,10 +269,13 @@ def register():
                 )
                 session.add(new_user)
                 session.commit()
+                
+                user_id = new_user.id
+                
                 return jsonify({
                     'status': 'success',
-                    'message': 'Registration data received successfully',
-                    'data': data
+                    'message': 'Registration successful',
+                    'user_id': user_id
                 }), 200
             except Exception as db_error:
                 print("Database Error:", str(db_error))
