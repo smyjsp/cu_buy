@@ -14,7 +14,7 @@ Through these initiatives, CUBuy empowers students to connect, collaborate, and 
 
 # Project Setup
 
-The following section will briefly describe the setup of the project. There will be 2 main components, [Backend](https://www.notion.so/CUBuy-Documentation-V0-1-15ed2f005564808c9b4afb3ce3c3a062?pvs=21) and [Frontend](https://www.notion.so/CUBuy-Documentation-V0-1-15ed2f005564808c9b4afb3ce3c3a062?pvs=21).
+The following section will briefly describe the setup of the project. There will be 2 main components, [Backend](https://www.notion.so/CUBuy-Documentation-V0-1-15ed2f005564808c9b4afb3ce3c3a062?pvs=21) and [Frontend](https://www.notion.so/CUBuy-Documentation-V0-1-15ed2f005564808c9b4afb3ce3c3a062?pvs=21). Additionally, we have attached an [External Dependencies](https://www.notion.so/CUBuy-Documentation-V0-1-15ed2f005564808c9b4afb3ce3c3a062?pvs=21) section for your reference.
 
 ## Backend
 
@@ -92,14 +92,14 @@ CREATE TABLE `Items` (
 
 - Explanation: This DDL creates a table named **`Items`** to store item listings with details like title, description, price, condition, and image URL. It includes timestamps for posting and pickup schedules, as well as a `sold` flag to track availability. The table enforces foreign key relationships with `Categories` and `Users` tables through `category_id` and `user_id`, ensuring referential integrity. Additionally, an `enum` field validates the item's condition, while indexes on `category_id` and `user_id`optimize query performance.
 
----
-
 <aside>
 💡
 
 We did not implement category function because of lack of time.
 
 </aside>
+
+---
 
 ## Frontend
 
@@ -159,3 +159,39 @@ cd COMS4170CUBuy
 You do not need to modify server or any config files.
 
 </aside>
+
+---
+
+## External Dependencies
+
+📱 **React Native Core**
+
+`react-native`: Core framework for building mobile apps
+
+`react-navigation/native & react-navigation/native-stack`: Navigation system
+
+`react-native-safe-area-context`: Handles safe area insets🎨
+
+**UI Components & Animation**
+
+`react-native-maps`: For displaying location maps
+
+`react-native-animatable`: Adds animations to components
+
+`expo-image-picker`: Handles image selection from camera/gallery
+
+`expo-image-manipulator`: For image processing and rotation🔧
+
+**Utilities**
+
+`expo-location`: Manages location services
+
+`react-native-community/datetimepicker`: Date and time picker component
+
+`react-native-modal-datetime-picker`: Modal wrapper for datetime picker🌐
+
+**Network & Data**
+
+`fetch`: Built-in API for network requests
+
+`FormData`: For handling multipart form data (image uploads)🔐
