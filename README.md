@@ -3,6 +3,7 @@
 # Introduction
 
 The mission of CUBuy is to foster a stronger sense of community among students at Columbia University by providing a dedicated platform for secure and seamless buying and selling of goods.
+Project by: Audrey Li, Alex Zhu, Judy Shi, Min Yub Song
 
 ### **Key Objectives**:
 
@@ -94,9 +95,6 @@ CREATE TABLE `Items` (
 
 <aside>
 💡
-
-We did not implement category function because of lack of time.
-
 </aside>
 
 ---
