@@ -431,7 +431,7 @@ const SellScreen = ({ navigation, route }) => {
                         if (details) handlePlaceSelect(data, details);
                       }}
                       query={{
-                        key: 'AIzaSyCozYDFbjQRzYoiWrt8ApN2uZYNBECYG4E',
+                        key: 'YOUR_TEMP_KEY_HERE_GOOGLE_API',
                         language: 'en',
                       }}
                       styles={{
